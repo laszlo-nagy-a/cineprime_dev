@@ -48,19 +48,23 @@
 ### writer_movie - kapcsolótábla
 --- 
 movie_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *film azonosítója*
+
 writer_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *író azonosítója*
 
 ### director_movie - kapcsolótábla
 ---
 movie_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *film azonosítója*
+
 director_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *rendező azonosítója*
 
 ### star_movie - kapcsolótábla
 ---
 movie_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *film azonosítója*
+
 star_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *színész azonosítója*
 
 ### genre_movie - kapcsolótábla
 ---
 movie_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *film azonosítója*
+
 genre_id - egész szám (SMALLINT UNSIGNED FOREIGN KEY) - *műfaj azonosítója*
