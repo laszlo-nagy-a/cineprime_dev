@@ -29,7 +29,7 @@
 - release_date - dátum (DATETIME) - *megjelenés dátuma*
 - pg  - egész szám (BIT) - *korhatár besorolás*
 - playtime_min - egész szám (SMALLINT UNSIGNED) - *játékidő percben*
-- last_modified_at - dátum  (DATETIME) - *utolsó módosítás dátuma*
+- last_modified_at - időbélyeg  (TIMESTAMP) - *utolsó módosítás dátuma*
 
 ### person_data - személy adatok
 ---
