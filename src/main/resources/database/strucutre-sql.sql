@@ -33,7 +33,7 @@ CREATE TABLE movie (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(500) NOT NULL,
 	release_date DATETIME,
-	pg BIT,
+	pg TINYINT,
 	playtime_min SMALLINT UNSIGNED,
 	last_modified_at TIMESTAMP
 	);
