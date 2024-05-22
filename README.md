@@ -8,7 +8,7 @@
 - spring-boot-starter-web
 - spring-boot-starter-data-jpa
 - lombok
-- mysql-connector-Java
+- mariadb-java-client
 - jakarta.persistence-api
 
 ## Build
