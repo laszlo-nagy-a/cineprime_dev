@@ -1,28 +1,29 @@
 package com.homeproject.cineprime.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Entity
-public class Genre extends PersonData{
+public class Genre{
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(
+          length = 500,
+          nullable = false
+    )
     private String name;
-    @ManyToMany(mappedBy = "genreList")
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "genreList"
+    )
     private List<Movie> movieList;
 
 }

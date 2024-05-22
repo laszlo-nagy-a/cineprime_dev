@@ -1,72 +1,100 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Entity
 public class Movie {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(
+            length = 500,
+            nullable = false
+    )
     private String title;
     @Column(name = "release_date")
     private Date releaseDate;
-    private Integer pg;
+    private Byte pg;
     @Column(name = "playtime_min")
-    private Integer playtimeMin;
+    private Short playtimeMin;
     @Column(name = "last_modified_at")
     private Timestamp lastModifiedAt;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "writer_movie",
             joinColumns = {
-                    @JoinColumn(name = "movie_id")
+                    @JoinColumn(
+                            name = "movie_id",
+                            nullable = false
+                    )
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "writer_id")
+                    @JoinColumn(
+                            name = "writer_id",
+                            nullable = false
+                    )
             }
     )
     private List<Writer> writerList;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "director_movie",
             joinColumns = {
-                    @JoinColumn(name = "movie_id")
+                    @JoinColumn(
+                            name = "movie_id",
+                            nullable = false
+                    )
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "director_id")
+                    @JoinColumn(
+                            name = "director_id",
+                            nullable = false
+                    )
             }
     )
     private List<Director> directorList;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "star_movie",
             joinColumns = {
-                    @JoinColumn(name = "movie_id")
+                    @JoinColumn(
+                            name = "movie_id",
+                            nullable = false
+                    )
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "star_id")
+                    @JoinColumn(
+                            name = "star_id",
+                            nullable = false
+                    )
             }
     )
     private List<Star> starList;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "genre_movie",
             joinColumns = {
-                    @JoinColumn(name = "movie_id")
+                    @JoinColumn(
+                            name = "movie_id",
+                            nullable = false
+                    )
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "genre_id")
+                    @JoinColumn(
+                            name = "genre_id",
+                            nullable = false
+                    )
             }
     )
     private List<Genre> genreList;

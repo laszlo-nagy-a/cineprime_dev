@@ -1,27 +1,28 @@
 package com.homeproject.cineprime.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
 
+import java.math.BigInteger;
 import java.util.List;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Entity
-public class Director extends PersonData{
+public class Director {
 
     @Id
-    @GeneratedValue
-    private Integer id;
-    @ManyToMany(mappedBy = "directorList")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "directorList"
+            )
     private List<Movie> movieList;
+    @Embedded
+    private PersonData personData;
 
 }

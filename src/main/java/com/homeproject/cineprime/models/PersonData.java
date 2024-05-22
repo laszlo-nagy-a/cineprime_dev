@@ -1,25 +1,31 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@MappedSuperclass
+@Setter
+@Getter
+@Embeddable
 public class PersonData {
 
-    @Column(name = "first_name")
+    @Column(
+            name = "first_name",
+            nullable = false
+    )
     private String firstName;
-    @Column(name = "last_name")
+    @Column(
+            name = "last_name",
+            nullable = false
+    )
     private String lastName;
-    private int age;
-    @Column(name = "birth_date")
+    private Short age;
     private Date birthdate;
 
 }
