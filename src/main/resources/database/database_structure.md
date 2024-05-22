@@ -27,7 +27,7 @@
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
 - title - szöveg (VARCHAR(500) NOT NULL) - *film címe*
 - release_date - dátum (DATETIME) - *megjelenés dátuma*
-- pg  - egész szám (BIT) - *korhatár besorolás*
+- pg  - egész szám (TINYINT) - *korhatár besorolás*
 - playtime_min - egész szám (SMALLINT UNSIGNED) - *játékidő percben*
 - last_modified_at - időbélyeg  (TIMESTAMP) - *utolsó módosítás dátuma*
 
