@@ -16,3 +16,5 @@
 2. Create user "root" with "root" password for the SQL server
 3. Run structure SQL from ../main/resources/database/structure-sql.sql
 4. Start the application
+5. Test it VIA Postman
+   6. Collection file included: ../src/test/CinePrime.postman_collection.json

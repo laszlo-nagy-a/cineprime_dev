@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "5667d98a-f0fe-480a-a953-b4429772ca79",
+		"name": "CinePrime",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29217823",
+		"_collection_link": "https://red-spaceship-523468.postman.co/workspace/Spring-Boot-REST-Udemy~14af45dc-f6ae-4fbb-92b0-ad5146ff9d3d/collection/29217823-5667d98a-f0fe-480a-a953-b4429772ca79?action=share&source=collection_link&creator=29217823"
+	},
+	"item": [
+		{
+			"name": "Director",
+			"item": [
+				{
+					"name": "GetOneDirector",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/directors/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"directors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDirector",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"personData\": {\r\n        \"firstName\": \"Kis\",\r\n        \"lastName\": \"Béla\",\r\n        \"age\": 30,\r\n        \"birthdate\": \"2020-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/directors",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateDirector",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"personData\": {\r\n        \"firstName\": \"Kis\",\r\n        \"lastName\": \"Elemér\",\r\n        \"age\": 22,\r\n        \"birthdate\": \"2010-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/directors",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOneDirector",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/directors/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"directors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllDirector",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/directors",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"directors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "CreateGenre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Comedy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/genres",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateGenre Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Drama\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/genres",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOneGenre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/genres/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"genres",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllGenre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/genres",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOneGenre",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/genres/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"genres",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
