@@ -2,9 +2,7 @@ package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @NoArgsConstructor
@@ -24,5 +22,4 @@ public class Director {
     private List<Movie> movieList;
     @Embedded
     private PersonData personData;
-
 }

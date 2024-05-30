@@ -2,8 +2,6 @@ package com.homeproject.cineprime.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
 import java.util.Date;
@@ -27,5 +25,4 @@ public class PersonData {
     private String lastName;
     private Short age;
     private Date birthdate;
-
 }
