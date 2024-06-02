@@ -1,5 +1,7 @@
 package com.homeproject.cineprime;
 
+import com.homeproject.cineprime.repositories.StarRepository;
+import com.homeproject.cineprime.services.StarService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
