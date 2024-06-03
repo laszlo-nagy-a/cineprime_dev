@@ -226,6 +226,336 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Star",
+			"item": [
+				{
+					"name": "CreateStar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"personData\": {\r\n        \"firstName\": \"Nagy\",\r\n        \"lastName\": \"Aladár\",\r\n        \"age\": 30,\r\n        \"birthdate\": \"2020-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/stars",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"stars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateStar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"personData\": {\r\n        \"firstName\": \"Kis\",\r\n        \"lastName\": \"Béla\",\r\n        \"age\": 30,\r\n        \"birthdate\": \"2020-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/stars",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"stars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOneStar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/stars/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"stars",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllStar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/stars",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"stars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOneStar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/stars/3",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"stars",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Writer",
+			"item": [
+				{
+					"name": "CreateWriter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"personData\": {\r\n        \"firstName\": \"Nagy\",\r\n        \"lastName\": \"Aladár\",\r\n        \"age\": 30,\r\n        \"birthdate\": \"2020-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/writers",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"writers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateWriter",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"personData\": {\r\n        \"firstName\": \"Kis\",\r\n        \"lastName\": \"Béla\",\r\n        \"age\": 30,\r\n        \"birthdate\": \"2020-10-10\"\r\n    }    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/writers",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"writers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOneWriter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/writers/2",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"writers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllWriter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/writers",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"writers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOneWriter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/writers/3",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"writers",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie",
+			"item": [
+				{
+					"name": "CreateMovie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"title\": \"A nagy pénz rablás\",\r\n    \"description\": \"lorme\",\r\n    \"releaseDate\": \"2022-12-12\",\r\n    \"pg\": 18,\r\n    \"playTimeMin\": \"120\",\r\n    \"writerList\": [{\"id\": 2}],\r\n    \"directorList\": [{\"id\": 2}],\r\n    \"genreList\": [{\"id\": 2}],\r\n    \"starList\": [{\"id\": 2}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/movies",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMovie",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"id\": 6,\r\n    \"title\": \"A kamra makka\",\r\n    \"description\": \"lorme\",\r\n    \"releaseDate\": \"2022-12-12\",\r\n    \"pg\": 18,\r\n    \"playTimeMin\": \"120\",\r\n    \"writerList\": [{\"id\": 2}],\r\n    \"directorList\": [{\"id\": 2}],\r\n    \"genreList\": [{\"id\": 2}],\r\n    \"starList\": [{\"id\": 2}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/movies",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOneMovie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/movies/2",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"movies",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllMovieCard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/movies",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteOneMovie",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/movies/9",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"movies",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
