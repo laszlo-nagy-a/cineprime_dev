@@ -19,6 +19,7 @@ public class Writer {
                 fetch = FetchType.LAZY,
                 mappedBy = "writerList"
         )
+        // TODO: Lazy nem működik, ez esetben DTO, vagy használjuk a JsonIdentifyInfo annotációt esetleg?
         private List<Movie> movieList;
         @Embedded
         private PersonData personData;

@@ -1,5 +1,7 @@
 # DATABASE STRUCTURE FOR CINEPRIME APP
-
+<!--- TODO: updatelni kell a diagram.pdf-et 
+    movie -> description mező
+--->
 ## TABLES AND COLUMNS
 
 ### genre - műfaj
@@ -26,6 +28,7 @@
 ---
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
 - title - szöveg (VARCHAR(500) NOT NULL) - *film címe*
+- description - szöveg (VARCHAR(1024) - *film összefolgalója*
 - release_date - dátum (DATETIME) - *megjelenés dátuma*
 - pg  - egész szám (TINYINT) - *korhatár besorolás*
 - playtime_min - egész szám (SMALLINT UNSIGNED) - *játékidő percben*

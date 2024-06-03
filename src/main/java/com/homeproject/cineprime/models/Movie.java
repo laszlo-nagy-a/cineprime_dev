@@ -22,11 +22,16 @@ public class Movie {
             nullable = false
     )
     private String title;
+    @Column(
+            length = 1024,
+            nullable = true
+    )
+    private String description;
     @Column(name = "release_date")
     private Date releaseDate;
     private Byte pg;
     @Column(name = "playtime_min")
-    private Short playtimeMin;
+    private Short playTimeMin;
     @Column(name = "last_modified_at")
     private Timestamp lastModifiedAt;
 

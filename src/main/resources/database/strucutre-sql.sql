@@ -32,6 +32,7 @@ CREATE TABLE star (
 CREATE TABLE movie (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(500) NOT NULL,
+    description VARCHAR(1024),
 	release_date DATETIME,
 	pg TINYINT,
 	playtime_min SMALLINT UNSIGNED,
