@@ -1,6 +1,9 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -15,9 +18,10 @@ public class Genre{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(
-          length = 500,
-          nullable = false
+    @NotBlank
+    @Size(
+            min = 1,
+            max = 500
     )
     private String name;
     @ManyToMany(
