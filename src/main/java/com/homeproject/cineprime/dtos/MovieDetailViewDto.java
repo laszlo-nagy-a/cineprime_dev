@@ -6,19 +6,15 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
-// TODO: recordot lehetne csinálni ebből az osztályból és akkor nem kellene annotálni se?
-public class MovieDetailViewDto {
-
-    private String movieTitle;
-    private String movieDescription;
-    private Date releaseDate;
-    private short playTimeMin;
-    private Byte pg;
-    private List<String> writerNames;
-    private List<String> directorNames;
-    private List<String> genreList;
-    private List<String> starList;
-
+public record MovieDetailViewDto (
+        String movieTitle,
+        String movieDescription,
+        Date releaseDate,
+        short playTimeMin,
+        Byte pg,
+        List<String> writerNames,
+        List<String> directorNames,
+        List<String> genreList,
+        List<String> starList
+        ) {
 }

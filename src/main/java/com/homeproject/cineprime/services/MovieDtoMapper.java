@@ -17,17 +17,12 @@ public class MovieDtoMapper {
             throw new IllegalArgumentException("The given argument is NULL! Try with Movie object");
         }
 
-        MovieDetailViewDto movieDetailViewDto = new MovieDetailViewDto();
+
         List<String> namesOfDirectors = new ArrayList<>();
         List<String> namesOfWriters = new ArrayList<>();
         List<String> namesOfGenres = new ArrayList<>();
         List<String> namesOfStars = new ArrayList<>();
 
-        movieDetailViewDto.setMovieTitle(movie.getTitle());
-        movieDetailViewDto.setMovieDescription(movie.getDescription());
-        movieDetailViewDto.setReleaseDate(movie.getReleaseDate());
-        movieDetailViewDto.setPlayTimeMin(movie.getPlayTimeMin());
-        movieDetailViewDto.setPg(movie.getPg());
         // TODO: másképp megírni az osztályokat, hogy egy generikus metódussal meg lehessen írni a listázó függvényt? (T extends PersonData)?
         movie.getDirectorList()
                 .forEach(x -> {
@@ -45,11 +40,18 @@ public class MovieDtoMapper {
                 .forEach(x -> {
                     namesOfGenres.add(x.getName());
                 });
-        movieDetailViewDto.setDirectorNames(namesOfDirectors);
-        movieDetailViewDto.setWriterNames(namesOfWriters);
-        movieDetailViewDto.setGenreList(namesOfGenres);
-        movieDetailViewDto.setStarList(namesOfStars);
 
+        MovieDetailViewDto movieDetailViewDto = new MovieDetailViewDto(
+                movie.getTitle(),
+                movie.getDescription(),
+                movie.getReleaseDate(),
+                movie.getPlayTimeMin(),
+                movie.getPg(),
+                namesOfWriters,
+                namesOfDirectors,
+                namesOfGenres,
+                namesOfStars
+        );
         return movieDetailViewDto;
     }
 
@@ -59,18 +61,16 @@ public class MovieDtoMapper {
             throw new IllegalArgumentException("The given argument is NULL! Try with Movie object");
         }
 
-        MovieCardViewDto movieCardViewDto = new MovieCardViewDto();
         List<String> genreNameList = new ArrayList<>();
-
-        movieCardViewDto.setMovieTitle(movie.getTitle());;
-        movieCardViewDto.setPg(movie.getPg());
 
         movie.getGenreList().forEach(x -> {
             genreNameList.add(x.getName());
         });
 
-        movieCardViewDto.setGenreList(genreNameList);
-
-        return movieCardViewDto;
+        return new MovieCardViewDto(
+                movie.getTitle(),
+                movie.getPg(),
+                genreNameList
+        );
     }
 }

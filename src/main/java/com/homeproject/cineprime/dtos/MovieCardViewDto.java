@@ -5,11 +5,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
-public class MovieCardViewDto {
+public record MovieCardViewDto(String movieTitle, Byte pg,List<String> genreList) {
 
-    private String movieTitle;
-    private Byte pg;
-    private List<String> genreList;
 }
