@@ -1,6 +1,7 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.util.List;
@@ -22,5 +23,6 @@ public class Writer {
         // TODO: Lazy nem működik, ez esetben DTO, vagy használjuk a JsonIdentifyInfo annotációt esetleg?
         private List<Movie> movieList;
         @Embedded
+        @Valid
         private PersonData personData;
 }

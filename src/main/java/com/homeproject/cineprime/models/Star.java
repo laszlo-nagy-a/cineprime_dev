@@ -1,6 +1,7 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.util.List;
@@ -21,5 +22,6 @@ public class Star {
     )
     private List<Movie> movieList;
     @Embedded
+    @Valid
     private PersonData personData;
 }

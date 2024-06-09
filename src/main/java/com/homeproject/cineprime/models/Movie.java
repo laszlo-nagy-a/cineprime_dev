@@ -1,6 +1,9 @@
 package com.homeproject.cineprime.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -18,14 +21,15 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(
-            length = 500,
-            nullable = false
+            length = 500
     )
+    @NotBlank
+    @Size(max = 500)
     private String title;
     @Column(
-            length = 1024,
-            nullable = true
+            length = 1024
     )
+    @Size(max = 1024)
     private String description;
     @Column(name = "release_date")
     private Date releaseDate;

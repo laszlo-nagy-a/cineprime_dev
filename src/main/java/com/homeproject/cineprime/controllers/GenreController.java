@@ -1,6 +1,7 @@
 package com.homeproject.cineprime.controllers;
 
 import com.homeproject.cineprime.models.Genre;
+import com.homeproject.cineprime.services.ControllerExceptionHandler;
 import com.homeproject.cineprime.services.GenreService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,19 +42,13 @@ public class GenreController {
     }
 
     @PutMapping("/genres")
-    public Genre updateGenre(@RequestBody Genre genreToUpdate) {
+    public Genre updateGenre(@Valid @RequestBody Genre genreToUpdate) {
         return genreService.updateGenre(genreToUpdate);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
-        Map<String, String> errors = new HashMap<>();
-        exception.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+        return ControllerExceptionHandler.handleValidationExceptions(exception);
     }
 }

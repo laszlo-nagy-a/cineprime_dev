@@ -2,7 +2,6 @@ package com.homeproject.cineprime.services;
 
 import com.homeproject.cineprime.dtos.MovieCardViewDto;
 import com.homeproject.cineprime.dtos.MovieDetailViewDto;
-import com.homeproject.cineprime.models.Genre;
 import com.homeproject.cineprime.models.Movie;
 import com.homeproject.cineprime.repositories.MovieRepository;
 import org.springframework.http.HttpStatus;
