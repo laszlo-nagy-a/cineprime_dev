@@ -4,8 +4,10 @@ import com.homeproject.cineprime.logic.dto.MovieCardViewDto;
 import com.homeproject.cineprime.logic.dto.MovieDetailViewDto;
 import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.domain.repository.MovieRepository;
+import com.homeproject.cineprime.logic.mapper.MovieDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -14,19 +16,19 @@ import java.util.Optional;
 @Service
 public class MovieService {
 
-    private MovieRepository movieRepository;
-    private MovieDtoMapper movieDtoMapper;
+    private final MovieRepository movieRepository;
+    private final MovieDtoMapper movieDtoMapper;
 
     public MovieService (MovieRepository movieRepository, MovieDtoMapper movieDtoMapper) {
         this.movieRepository = movieRepository;
         this.movieDtoMapper = movieDtoMapper;
     }
 
+    @Transactional(readOnly = true)
     public MovieDetailViewDto getMovieById(Long id) {
 
         Optional<Movie> movie = movieRepository.findById(id);
         if(movie.isEmpty()) {
-            // TODO: Jó helyen van a hiba dobva (nem controllerben kell)?
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + id);
         }
 

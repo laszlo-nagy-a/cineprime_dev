@@ -1,7 +1,7 @@
 package com.homeproject.cineprime.view.controller;
 
 import com.homeproject.cineprime.domain.model.Director;
-import com.homeproject.cineprime.logic.service.ControllerExceptionHandler;
+import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.DirectorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class DirectorController {
@@ -21,7 +20,7 @@ public class DirectorController {
         this.directorService = directorService;
     }
     @GetMapping("/directors/{director-id}")
-    public Optional<Director> findDirectorById(@PathVariable("director-id") Long id) {
+    public Director findDirectorById(@PathVariable("director-id") Long id) {
         return directorService.getDirectorById(id);
     }
 

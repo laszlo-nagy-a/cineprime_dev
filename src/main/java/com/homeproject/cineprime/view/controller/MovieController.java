@@ -3,7 +3,7 @@ package com.homeproject.cineprime.view.controller;
 import com.homeproject.cineprime.logic.dto.MovieCardViewDto;
 import com.homeproject.cineprime.logic.dto.MovieDetailViewDto;
 import com.homeproject.cineprime.domain.model.Movie;
-import com.homeproject.cineprime.logic.service.ControllerExceptionHandler;
+import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

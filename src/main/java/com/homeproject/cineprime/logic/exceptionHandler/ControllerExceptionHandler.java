@@ -1,4 +1,4 @@
-package com.homeproject.cineprime.logic.service;
+package com.homeproject.cineprime.logic.exceptionHandler;
 
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

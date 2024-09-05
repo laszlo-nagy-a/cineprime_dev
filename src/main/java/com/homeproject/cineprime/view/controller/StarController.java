@@ -1,7 +1,7 @@
 package com.homeproject.cineprime.view.controller;
 
 import com.homeproject.cineprime.domain.model.Star;
-import com.homeproject.cineprime.logic.service.ControllerExceptionHandler;
+import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.StarService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

@@ -4,6 +4,7 @@ import com.homeproject.cineprime.domain.model.Director;
 import com.homeproject.cineprime.domain.repository.DirectorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -18,18 +19,15 @@ public class DirectorService {
         this.directorRepository = directorRepository;
     }
 
-    public Optional<Director> getDirectorById(Long id) {
+
+    @Transactional(readOnly = true)
+    public Director getDirectorById(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("The given number is NULL, try with another number!");
         }
 
         Optional<Director> director = directorRepository.findById(id);
-        if(director.isEmpty()) {
-            // TODO: Jó helyen van a hiba dobva (nem controllerben kell)?
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + id);
-        }
-
-        return director;
+        return director.get();
     }
 
     public void createDirector(Director director) {

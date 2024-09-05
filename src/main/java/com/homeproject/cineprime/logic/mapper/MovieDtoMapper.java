@@ -1,4 +1,4 @@
-package com.homeproject.cineprime.logic.service;
+package com.homeproject.cineprime.logic.mapper;
 
 import com.homeproject.cineprime.logic.dto.MovieCardViewDto;
 import com.homeproject.cineprime.logic.dto.MovieDetailViewDto;
