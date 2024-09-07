@@ -24,6 +24,20 @@ public class DirectorService {
         this.directorRepository = directorRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<DirectorResponseJson> getAllDirectorResponseJson() {
+
+        List<Director> allDirector = directorRepository.findAll();
+        List<DirectorDto> allDirectorDto = allDirector
+                .stream()
+                .map(DirectorMapper::directorToDto)
+                .toList();
+
+        return allDirectorDto
+                .stream()
+                .map(DirectorMapper::dtoToResponse)
+                .toList();
+    }
 
     @Transactional(readOnly = true)
     public DirectorResponseJson getDirectorResponseJsonByPublicId(String publicId) {
@@ -71,41 +85,6 @@ public class DirectorService {
         return returnValue;
     }
 
-    public List<DirectorResponseJson> getAllDirectorResponseJson() {
-
-        List<Director> allDirector = directorRepository.findAll();
-        List<DirectorDto> allDirectorDto = allDirector
-                .stream()
-                .map(DirectorMapper::directorToDto)
-                .toList();
-
-        return allDirectorDto
-                .stream()
-                .map(DirectorMapper::dtoToResponse)
-                .toList();
-    }
-
-    public String removeDirectorByPublidId(String publicId) {
-
-        if(publicId == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "The identifier is null. Give a valid identifier number!"
-            );
-        }
-
-        Optional<Director> director = directorRepository.findByPublicId(publicId);
-
-        if(director.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + publicId);
-        }
-
-        directorRepository.delete(director.get());
-
-        return "Director with identifier: " + publicId + " successfully deleted!";
-    }
-
-
     public DirectorResponseJson updateDirector(DirectorRequestJson directorRequestJson) {
 
         if(!(directorRequestJson instanceof  DirectorRequestJson) || directorRequestJson == null) {
@@ -135,4 +114,23 @@ public class DirectorService {
         return returnValue;
     }
 
+    public String removeDirectorByPublidId(String publicId) {
+
+        if(publicId == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The identifier is null. Give a valid identifier number!"
+            );
+        }
+
+        Optional<Director> director = directorRepository.findByPublicId(publicId);
+
+        if(director.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + publicId);
+        }
+
+        directorRepository.delete(director.get());
+
+        return "Director with identifier: " + publicId + " successfully deleted!";
+    }
 }

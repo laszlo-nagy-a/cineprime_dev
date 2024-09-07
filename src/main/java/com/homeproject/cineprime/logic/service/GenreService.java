@@ -22,9 +22,7 @@ public class GenreService {
 
     private GenreRepository genreRepository;
 
-    public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) {
-        this.genreRepository = genreRepository;
-    };
+    public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) { this.genreRepository = genreRepository; };
 
     @Transactional(readOnly = true)
     public List<GenreResponseJson> getAllGenreResponseJson() {
@@ -40,25 +38,6 @@ public class GenreService {
                 .toList();
     }
 
-    public GenreResponseJson createGenre(GenreRequestJson genreRequestJson) {
-        if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
-        }
-
-        GenreDto genreDto = new GenreDto();
-        genreDto = GenreMapper.requestToDto(genreRequestJson);
-
-        Genre newEntity = new Genre();
-        newEntity = GenreMapper.dtoToGenre(genreDto);
-        newEntity.setPublicId(PublicIdGenerator.generateId(30));
-
-        Genre savedEntity = genreRepository.save(newEntity);
-        GenreDto savedEntityDto = GenreMapper.genreToDto(savedEntity);
-        GenreResponseJson returnValue = new GenreResponseJson();
-        returnValue = GenreMapper.dtoToResponse(savedEntityDto);
-
-        return returnValue;
-    }
     //TODO: exception handling Transactionnalra
     @Transactional(readOnly = true)
     public GenreResponseJson getGenreResponseJsonById(String publicId) {
@@ -85,26 +64,27 @@ public class GenreService {
         return returnValue;
     }
 
-    public String removeGenreByPublidId(String publicId) {
-        if(publicId == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "The identifier is null. Give a valid identifier number!"
-            );
+    public GenreResponseJson createGenre(GenreRequestJson genreRequestJson) {
+        if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Genre> genre = genreRepository.findByPublicId(publicId);
+        GenreDto genreDto = new GenreDto();
+        genreDto = GenreMapper.requestToDto(genreRequestJson);
 
-        if(genre.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
-        }
+        Genre newEntity = new Genre();
+        newEntity = GenreMapper.dtoToGenre(genreDto);
+        newEntity.setPublicId(PublicIdGenerator.generateId(30));
 
-        genreRepository.delete(genre.get());
+        Genre savedEntity = genreRepository.save(newEntity);
+        GenreDto savedEntityDto = GenreMapper.genreToDto(savedEntity);
+        GenreResponseJson returnValue = new GenreResponseJson();
+        returnValue = GenreMapper.dtoToResponse(savedEntityDto);
 
-        return "Genre with identifier: " + publicId + " successfully deleted!";
+        return returnValue;
     }
 
-     public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) {
+    public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) {
         if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -130,4 +110,22 @@ public class GenreService {
         return returnValue;
     }
 
+    public String removeGenreByPublidId(String publicId) {
+        if(publicId == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The identifier is null. Give a valid identifier number!"
+            );
+        }
+
+        Optional<Genre> genre = genreRepository.findByPublicId(publicId);
+
+        if(genre.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
+        }
+
+        genreRepository.delete(genre.get());
+
+        return "Genre with identifier: " + publicId + " successfully deleted!";
+    }
 }
