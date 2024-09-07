@@ -22,7 +22,6 @@ public class GenreController {
         this.genreService = genreService;
     }
 
-    // TODO: public_id-re kell a kéréseket visszaadni
     @GetMapping("/{genre-id}")
     public GenreResponseJson findGenre(@PathVariable("genre-id")String publicId) {
         return genreService.getGenreResponseJsonById(publicId);
@@ -38,13 +37,11 @@ public class GenreController {
         return genreService.createGenre(request);
     }
 
-    // TODO: public id-vel törlés
     @DeleteMapping("/{genre-id}")
-    public String removeGenreById(@PathVariable("genre-id")Long id) {
-        return genreService.deleteGenre(id);
+    public String removeGenreById(@PathVariable("genre-id")String publicId) {
+        return genreService.removeGenreByPublidId(publicId);
     }
 
-    // TODO: public id-vel update
     @PutMapping
     public GenreResponseJson updateGenre(@Valid @RequestBody GenreRequestJson request) {
         return genreService.updateGenre(request);

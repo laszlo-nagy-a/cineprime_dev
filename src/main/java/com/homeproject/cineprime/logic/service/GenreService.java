@@ -21,11 +21,9 @@ import com.homeproject.cineprime.logic.mapper.GenreMapper;
 public class GenreService {
 
     private GenreRepository genreRepository;
-    private GenreMapper genreMapper;
 
     public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) {
         this.genreRepository = genreRepository;
-        this.genreMapper = genreMapper;
     };
 
     @Transactional(readOnly = true)
@@ -87,26 +85,26 @@ public class GenreService {
         return returnValue;
     }
 
-    public String deleteGenre(Long id) {
-        if(id == null) {
+    public String removeGenreByPublidId(String publicId) {
+        if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "The identifier is null. Give a valid identifier number!"
             );
         }
 
-        Optional<Genre> genre = genreRepository.findById(id);
+        Optional<Genre> genre = genreRepository.findByPublicId(publicId);
 
         if(genre.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " +id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
         }
 
         genreRepository.delete(genre.get());
 
-        return "Genre with identifier: " + id + " successfully deleted!";
+        return "Genre with identifier: " + publicId + " successfully deleted!";
     }
 
-    public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) {
+     public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) {
         if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -117,14 +115,17 @@ public class GenreService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + genreRequestJson.getPublicId());
         }
 
-        Genre genre = genreToUpdate.get();
-        genre.setName(genreRequestJson.getName());
+        Genre genre = new Genre();
+        GenreDto genreDto = new GenreDto();
+        genreDto = GenreMapper.requestToDto(genreRequestJson);
+        genre = GenreMapper.dtoToGenre(genreDto);
 
+        genre.setId(genreToUpdate.get().getId());
         Genre updatedGenre = genreRepository.save(genre);
-        GenreDto genreDtoForResponse = new GenreDto() ;
-        genreDtoForResponse = GenreMapper.genreToDto(updatedGenre);
 
-        GenreResponseJson returnValue = GenreMapper.dtoToResponse(genreDtoForResponse);
+        GenreDto savedGenreDto = new GenreDto() ;
+        savedGenreDto = GenreMapper.genreToDto(updatedGenre);
+        GenreResponseJson returnValue = GenreMapper.dtoToResponse(savedGenreDto);
 
         return returnValue;
     }

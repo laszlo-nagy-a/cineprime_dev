@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface DirectorRepository extends JpaRepository<Director, Long> {
 
+    public Optional<Director> findByPublicId(String publicId);
 }

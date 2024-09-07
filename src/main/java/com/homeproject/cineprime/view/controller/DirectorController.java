@@ -3,6 +3,8 @@ package com.homeproject.cineprime.view.controller;
 import com.homeproject.cineprime.domain.model.Director;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.DirectorService;
+import com.homeproject.cineprime.view.request_json.DirectorRequestJson;
+import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("directors")
 public class DirectorController {
 
     private DirectorService directorService;
@@ -19,30 +22,31 @@ public class DirectorController {
     public DirectorController(DirectorService directorService) {
         this.directorService = directorService;
     }
-    @GetMapping("/directors/{director-id}")
-    public Director findDirectorById(@PathVariable("director-id") Long id) {
-        return directorService.getDirectorById(id);
-    }
 
-    @GetMapping("/directors")
-    public List<Director> findAllDirector() {
-        return directorService.getAllDirector();
+    @GetMapping
+    public List<DirectorResponseJson> findAllDirector() {
+        return directorService.getAllDirectorResponseJson();
+    }
+    @GetMapping("/{director-public-id}")
+    public DirectorResponseJson findDirector(@PathVariable("director-public-id") String publicId) {
+        return directorService.getDirectorResponseJsonByPublicId(publicId);
     }
 
     //TODO: personData JSON postolás helyett megoldható valahogy?
-    @PostMapping("/directors")
-    public void createDirector(@Valid @RequestBody Director director) {
-        directorService.createDirector(director);
+    @PostMapping
+    public DirectorResponseJson createDirector(@Valid @RequestBody DirectorRequestJson request) {
+        return directorService.createDirector(request);
     }
 
-    @PutMapping("/directors")
-    public void updateDirectorById(@Valid @RequestBody Director directorToUpdate) {
-        directorService.updateDirector(directorToUpdate);
+    @PutMapping
+    public DirectorResponseJson updateDirectorById(@Valid @RequestBody DirectorRequestJson request) {
+        return directorService.updateDirector(request);
     }
 
-    @DeleteMapping("/directors/{director-id}")
-    public String removeDriectorById(@PathVariable("director-id") Long id) {
-        return directorService.deleteDirector(id);
+    // TODO: törlés logikailag a kapcsolódó entitások miatt?
+    @DeleteMapping("/{director-id}")
+    public String removeDriectorById(@PathVariable("director-id") String publicId) {
+        return directorService.removeDirectorByPublidId(publicId);
     }
 
     //TODO: hiba kezelés így jó lehet jakarta validationnal?
