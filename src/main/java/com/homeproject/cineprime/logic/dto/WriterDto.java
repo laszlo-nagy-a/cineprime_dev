@@ -1,4 +1,4 @@
-package com.homeproject.cineprime.view.request_json;
+package com.homeproject.cineprime.logic.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +7,11 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class DirectorRequestJson {
+public class WriterDto {
+    private Long id;
     private String publicId;
     private String firstName;
     private String lastName;
-    private short age;
-    private Date birthDate;
+    private Short age;
+    private Date bithDate;
 }

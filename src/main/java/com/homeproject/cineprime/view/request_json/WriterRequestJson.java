@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class DirectorRequestJson {
+public class WriterRequestJson {
     private String publicId;
     private String firstName;
     private String lastName;
