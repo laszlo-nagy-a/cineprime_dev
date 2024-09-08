@@ -2,7 +2,6 @@ package com.homeproject.cineprime.logic.mapper;
 
 import com.homeproject.cineprime.domain.model.Genre;
 import com.homeproject.cineprime.logic.dto.GenreDto;
-import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.GenreRequestJson;
 import com.homeproject.cineprime.view.response_json.GenreResponseJson;
 import org.springframework.stereotype.Service;

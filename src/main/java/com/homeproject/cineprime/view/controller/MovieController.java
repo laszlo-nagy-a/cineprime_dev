@@ -1,10 +1,9 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.logic.dto.MovieCardViewDto;
-import com.homeproject.cineprime.logic.dto.MovieDetailViewDto;
 import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.MovieService;
+import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/movies")
 public class MovieController {
 
     private MovieService movieService;
@@ -22,14 +22,14 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping("/movies/{movie-id}")
-    public MovieDetailViewDto findMovieById(@PathVariable("movie-id")Long id) {
-        return movieService.getMovieById(id);
+    @GetMapping("/{movie-id}")
+    public MovieResponseJson findMovieById(@PathVariable("movie-id")String publicId) {
+        return movieService.getMovieByPublicId(publicId);
     }
 
-    @GetMapping("/movies")
-    public List<MovieCardViewDto> findAllMovieCard() {
-        return movieService.getAllMovie();
+    @GetMapping
+    public List<MovieResponseJson> findAllMovie() {
+        return movieService.getAllMovieResponseJson();
     }
 
     @PostMapping("/movies")

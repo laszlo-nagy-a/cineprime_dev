@@ -1,6 +1,5 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.domain.model.Director;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.DirectorService;
 import com.homeproject.cineprime.view.request_json.DirectorRequestJson;

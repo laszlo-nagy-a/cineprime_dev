@@ -19,6 +19,7 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String publicId;
     @Column(
             length = 500
     )
@@ -37,7 +38,6 @@ public class Movie {
     private Short playTimeMin;
     @Column(name = "last_modified_at")
     private Timestamp lastModifiedAt;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "writer_movie",

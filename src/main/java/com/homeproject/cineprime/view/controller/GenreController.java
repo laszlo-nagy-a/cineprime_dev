@@ -1,6 +1,5 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.domain.model.Genre;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.GenreService;
 import com.homeproject.cineprime.view.request_json.GenreRequestJson;

@@ -1,10 +1,11 @@
 package com.homeproject.cineprime.logic.service;
 
-import com.homeproject.cineprime.logic.dto.MovieCardViewDto;
-import com.homeproject.cineprime.logic.dto.MovieDetailViewDto;
 import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.domain.repository.MovieRepository;
-import com.homeproject.cineprime.logic.mapper.MovieDtoMapper;
+import com.homeproject.cineprime.logic.dto.MovieDto;
+import com.homeproject.cineprime.logic.mapper.MovieMapper;
+import com.homeproject.cineprime.view.response_json.MovieResponseJson;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,30 +18,47 @@ import java.util.Optional;
 public class MovieService {
 
     private final MovieRepository movieRepository;
-    private final MovieDtoMapper movieDtoMapper;
 
-    public MovieService (MovieRepository movieRepository, MovieDtoMapper movieDtoMapper) {
+    public MovieService (MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
-        this.movieDtoMapper = movieDtoMapper;
     }
 
     @Transactional(readOnly = true)
-    public MovieDetailViewDto getMovieById(Long id) {
+    public List<MovieResponseJson> getAllMovieResponseJson() {
+        List<Movie> allMovies = movieRepository.findAll();
+        List<MovieDto> allMovieDto = allMovies
+                .stream()
+                .map(MovieMapper::movieToDto)
+                .toList();
 
-        Optional<Movie> movie = movieRepository.findById(id);
-        if(movie.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + id);
-        }
-
-        return movieDtoMapper.movieToMovieDetailViewDto(movie.get());
+        return allMovieDto
+                .stream()
+                .map(MovieMapper::dtoToResponse)
+                .toList();
     }
 
-    public List<MovieCardViewDto> getAllMovie() {
-        List<Movie> allMovie = movieRepository.findAll();
+    @Transactional(readOnly = true)
+    public MovieResponseJson getMovieByPublicId(String publicId) {
+        if(StringUtils.isEmpty(publicId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    """
+                    The given ID is NULL or empty string, 
+                    try with another ID! Given ID: 
+                    """ + publicId);
+        }
 
-        return allMovie.stream()
-                .map(MovieDtoMapper::movieToMovieCardDto)
-                .toList();
+        Optional<Movie> movie = movieRepository.findByPublicId(publicId);
+
+        if(movie.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + publicId);
+        }
+
+        MovieDto movieDto = new MovieDto();
+        movieDto = MovieMapper.movieToDto(movie.get());
+        MovieResponseJson returnValue = new MovieResponseJson();
+        returnValue = MovieMapper.dtoToResponse(movieDto);
+
+        return returnValue;
     }
 
     public void createMovie(Movie movie) {
