@@ -1,8 +1,9 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.domain.model.Star;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.StarService;
+import com.homeproject.cineprime.view.request_json.StarRequestJson;
+import com.homeproject.cineprime.view.response_json.StarResponseJson;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("/stars")
 public class StarController {
 
     private StarService starService;
@@ -21,29 +22,30 @@ public class StarController {
         this.starService = starService;
     }
 
-    @PostMapping("/stars")
-    public void createGenre(@Valid @RequestBody Star star) {
-        starService.createStar(star);
+    @GetMapping("/{star-id}")
+    public StarResponseJson findStar(@PathVariable("star-id")String publicId) {
+        return starService.getStarResponseJsonById(publicId);
     }
 
-    @GetMapping("/stars")
-    public List<Star> findAllStar() {
-        return starService.getAllStar();
+    @GetMapping
+    public List<StarResponseJson> findAllStar() {
+        return starService.getAllStarResponseJson();
     }
 
-    @GetMapping("/stars/{star-id}")
-    public Optional<Star> findGenreById(@PathVariable("star-id")Long id) {
-        return starService.getStarById(id);
+    @PostMapping
+    public StarResponseJson createGenre(@Valid @RequestBody StarRequestJson request) {
+        return starService.createStar(request);
     }
 
-    @DeleteMapping("/stars/{star-id}")
-    public String removeGenreById(@PathVariable("star-id")Long id) {
-        return starService.deleteStar(id);
+    //TODO: egységesíteni kellene a requesteket, hogy az azonosítót URL-ből kapja?
+    @PutMapping
+    public StarResponseJson updateGenre(@Valid @RequestBody StarRequestJson request) {
+        return starService.updateStar(request);
     }
 
-    @PutMapping("/stars")
-    public void updateGenre(@Valid @RequestBody Star starToUpdate) {
-        starService.updateGenre(starToUpdate);
+    @DeleteMapping("/{star-id}")
+    public String removeStarById(@PathVariable("star-id")String publicId) {
+        return starService.removeStarByPublidId(publicId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

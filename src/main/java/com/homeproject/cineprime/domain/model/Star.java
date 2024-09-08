@@ -16,6 +16,7 @@ public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String publicId;
     @ManyToMany(
             fetch = FetchType.LAZY,
             mappedBy = "starList"

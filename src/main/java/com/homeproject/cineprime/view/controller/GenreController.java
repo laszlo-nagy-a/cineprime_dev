@@ -37,14 +37,14 @@ public class GenreController {
         return genreService.createGenre(request);
     }
 
-    @DeleteMapping("/{genre-id}")
-    public String removeGenreById(@PathVariable("genre-id")String publicId) {
-        return genreService.removeGenreByPublidId(publicId);
-    }
-
     @PutMapping
     public GenreResponseJson updateGenre(@Valid @RequestBody GenreRequestJson request) {
         return genreService.updateGenre(request);
+    }
+
+    @DeleteMapping("/{genre-id}")
+    public String removeGenreById(@PathVariable("genre-id")String publicId) {
+        return genreService.removeGenreByPublidId(publicId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
