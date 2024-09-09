@@ -5,7 +5,6 @@ import com.homeproject.cineprime.domain.repository.MovieRepository;
 import com.homeproject.cineprime.logic.dto.MovieDto;
 import com.homeproject.cineprime.logic.mapper.MovieMapper;
 import com.homeproject.cineprime.logic.util.PublicIdGenerator;
-import com.homeproject.cineprime.view.request_json.StarRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import io.micrometer.common.util.StringUtils;
@@ -14,11 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieService {

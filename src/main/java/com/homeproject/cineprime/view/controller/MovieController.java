@@ -1,6 +1,5 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.MovieService;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
