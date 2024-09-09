@@ -126,4 +126,8 @@ public class StarService {
 
         return "Star with identifier: " + publicId + " successfully deleted!";
     }
+
+    public Optional<Star> findByPublicId(String starPublicId) {
+        return starRepository.findByPublicId(starPublicId);
+    }
 }

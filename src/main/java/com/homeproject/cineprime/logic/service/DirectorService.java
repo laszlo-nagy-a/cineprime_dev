@@ -133,4 +133,8 @@ public class DirectorService {
 
         return "Director with identifier: " + publicId + " successfully deleted!";
     }
+
+    public Optional<Director> findByPublicId(String directorPublicId) {
+        return directorRepository.findByPublicId(directorPublicId);
+    }
 }

@@ -33,13 +33,13 @@ public class StarController {
     }
 
     @PostMapping
-    public StarResponseJson createGenre(@Valid @RequestBody StarRequestJson request) {
+    public StarResponseJson createStar(@Valid @RequestBody StarRequestJson request) {
         return starService.createStar(request);
     }
 
     //TODO: egységesíteni kellene a requesteket, hogy az azonosítót URL-ből kapja?
     @PutMapping
-    public StarResponseJson updateGenre(@Valid @RequestBody StarRequestJson request) {
+    public StarResponseJson updateStar(@Valid @RequestBody StarRequestJson request) {
         return starService.updateStar(request);
     }
 

@@ -18,8 +18,8 @@ public class MovieDto {
     private Byte pg;
     private Short playTimeMin;
     private Timestamp lastModifiedAt;
-    private List<WriterDto> writerList;
-    private List<DirectorDto> directorList;
-    private List<StarDto> starList;
-    private List<GenreDto> genreList;
+    private List<WriterDto> writerDtoList;
+    private List<DirectorDto> directorDtoList;
+    private List<StarDto> starDtoList;
+    private List<GenreDto> genreDtoList;
 }

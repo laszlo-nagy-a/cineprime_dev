@@ -19,9 +19,7 @@ import com.homeproject.cineprime.logic.mapper.GenreMapper;
 
 @Service
 public class GenreService {
-
     private GenreRepository genreRepository;
-
     public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) { this.genreRepository = genreRepository; };
 
     @Transactional(readOnly = true)
@@ -127,5 +125,9 @@ public class GenreService {
         genreRepository.delete(genre.get());
 
         return "Genre with identifier: " + publicId + " successfully deleted!";
+    }
+
+    public Optional<Genre> getGenreByPublicId(String publicId) {
+        return genreRepository.findByPublicId(publicId);
     }
 }

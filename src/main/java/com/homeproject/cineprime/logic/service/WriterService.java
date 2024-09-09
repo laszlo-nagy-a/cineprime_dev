@@ -130,4 +130,8 @@ public class WriterService {
 
         return "Writer with identifier: " + publicId + " successfully deleted!";
     }
+
+    public Optional<Writer> findByPublicId(String writerPublicId) {
+        return writerRepository.findByPublicId(writerPublicId);
+    }
 }

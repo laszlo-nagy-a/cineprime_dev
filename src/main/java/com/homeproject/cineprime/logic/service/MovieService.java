@@ -4,6 +4,9 @@ import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.domain.repository.MovieRepository;
 import com.homeproject.cineprime.logic.dto.MovieDto;
 import com.homeproject.cineprime.logic.mapper.MovieMapper;
+import com.homeproject.cineprime.logic.util.PublicIdGenerator;
+import com.homeproject.cineprime.view.request_json.StarRequestJson;
+import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -11,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -61,22 +67,51 @@ public class MovieService {
         return returnValue;
     }
 
-    public void createMovie(Movie movie) {
-        movieRepository.save(movie);
+    //TODO: duplikált kapcsolatok kezelése
+    public MovieResponseJson createMovie(MovieRequestJson movieRequestJson) {
+        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
+        }
+
+        MovieDto movieDto = new MovieDto();
+        movieDto = MovieMapper.requestToDto(movieRequestJson);
+
+        Movie newEntity = new Movie();
+        newEntity = MovieMapper.dtoToMovie(movieDto);
+        newEntity.setPublicId(PublicIdGenerator.generateId(30));
+
+        Movie savedMovie = movieRepository.save(newEntity);
+        MovieDto savedMovieDto = MovieMapper.movieToDto(savedMovie);
+        MovieResponseJson returnValue = new MovieResponseJson();
+        returnValue = MovieMapper.dtoToResponse(savedMovieDto);
+
+        return returnValue;
     }
 
-    public void updateMovie(Movie movieToUpdate) {
-        if(movieToUpdate == null) {
-            throw new IllegalArgumentException("The entity is null. Give a valid identifier number!");
+    public MovieResponseJson updateMovie(MovieRequestJson movieRequestJson) {
+        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Movie> movie = movieRepository.findById(movieToUpdate.getId());
+        Optional<Movie> movieToUpdate = movieRepository.findByPublicId(movieRequestJson.getPublicId());
 
-        if(movie.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + movieToUpdate.getId());
+        if(movieToUpdate.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + movieRequestJson.getPublicId());
         }
 
-        movieRepository.save(movieToUpdate);
+        Movie movie = new Movie();
+        MovieDto movieDto = new MovieDto();
+        movieDto = MovieMapper.requestToDto(movieRequestJson);
+        movie = MovieMapper.dtoToMovie(movieDto);
+
+        movie.setId(movieToUpdate.get().getId());
+        Movie updatedMovie = movieRepository.save(movie);
+
+        MovieDto savedMovieDto = new MovieDto();
+        savedMovieDto = MovieMapper.movieToDto(updatedMovie);
+        MovieResponseJson returnValue = MovieMapper.dtoToResponse(savedMovieDto);
+
+        return returnValue;
     }
 
     public String deleteMovie(Long id) {
