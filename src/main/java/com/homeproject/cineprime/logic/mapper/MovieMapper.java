@@ -34,6 +34,7 @@ public class MovieMapper {
     @Autowired
     private StarService starServiceAutowire;
 
+    // TODO: application context használata inkább?
     @PostConstruct
     private void initServices() {
         genreService = genreServiceAutowire;
@@ -59,6 +60,7 @@ public class MovieMapper {
         returnValue.setPlayTimeMin(movie.getPlayTimeMin());
         returnValue.setLastModifiedAt(movie.getLastModifiedAt());
 
+        //TODO: generikus készítése ennek implementálásával?
         if(movie.getWriterList() != null) {
             returnValue.setWriterDtoList(movie.getWriterList()
                     .stream()

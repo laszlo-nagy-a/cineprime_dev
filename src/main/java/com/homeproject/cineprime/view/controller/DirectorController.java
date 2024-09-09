@@ -31,7 +31,6 @@ public class DirectorController {
         return directorService.getDirectorResponseJsonByPublicId(publicId);
     }
 
-    //TODO: personData JSON postolás helyett megoldható valahogy?
     @PostMapping
     public DirectorResponseJson createDirector(@Valid @RequestBody DirectorRequestJson request) {
         return directorService.createDirector(request);

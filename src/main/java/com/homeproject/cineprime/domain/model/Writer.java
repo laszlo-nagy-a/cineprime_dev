@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Entity
 public class Writer {
-
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
@@ -21,7 +20,6 @@ public class Writer {
                 fetch = FetchType.LAZY,
                 mappedBy = "writerList"
         )
-        // TODO: Lazy nem működik, ez esetben DTO, vagy használjuk a JsonIdentifyInfo annotációt esetleg?
         private List<Movie> movieList;
         @Embedded
         @Valid

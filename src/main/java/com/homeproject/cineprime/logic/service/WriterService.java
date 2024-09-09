@@ -40,11 +40,9 @@ public class WriterService {
                 .toList();
     }
 
-    //TODO: exception handling Transactionnalra
     @Transactional(readOnly = true)
     public WriterResponseJson getWriterResponseJsonById(String publicId) {
         if(StringUtils.isEmpty(publicId)) {
-            // TODO: nem jelenik meg a végpont responseban a hiba oka, needs fix
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
                     The given ID is NULL or empty string, 

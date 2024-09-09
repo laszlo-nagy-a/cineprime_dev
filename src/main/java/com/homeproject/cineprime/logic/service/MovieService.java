@@ -63,7 +63,6 @@ public class MovieService {
         return returnValue;
     }
 
-    //TODO: duplikált kapcsolatok kezelése
     public MovieResponseJson createMovie(MovieRequestJson movieRequestJson) {
         if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
