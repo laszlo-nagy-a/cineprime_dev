@@ -32,6 +32,7 @@ public class Movie {
     @Size(max = 1024)
     private String description;
     @Column(name = "release_date")
+    @Temporal(TemporalType.DATE)
     private Date releaseDate;
     private Byte pg;
     @Column(name = "playtime_min")
@@ -106,4 +107,5 @@ public class Movie {
             }
     )
     private List<Genre> genreList;
+    private Date deletedAt;
 }

@@ -3,7 +3,8 @@ CREATE DATABASE cineprime CHARACTER SET utf8mb4;
 CREATE TABLE genre (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
     public_id VARCHAR(255) UNIQUE,
-    name VARCHAR(500) NOT NULL
+    name VARCHAR(500) NOT NULL,
+    deleted_at DATETIME
 	);
 	
 CREATE TABLE director (
@@ -12,7 +13,8 @@ CREATE TABLE director (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	age SMALLINT,
-	birthdate DATETIME
+	birthdate DATE,
+    deleted_at DATETIME
 	);
 	
 CREATE TABLE writer (
@@ -21,7 +23,8 @@ CREATE TABLE writer (
     first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	age SMALLINT,
-	birthdate DATETIME
+	birthdate DATE,
+    deleted_at DATETIME
 	);
 	
 CREATE TABLE star (
@@ -30,7 +33,8 @@ CREATE TABLE star (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	age SMALLINT,
-	birthdate DATETIME
+	birthdate DATE,
+    deleted_at DATETIME
 	);
 	
 CREATE TABLE movie (
@@ -38,10 +42,11 @@ CREATE TABLE movie (
     public_id VARCHAR(255) UNIQUE,
 	title VARCHAR(500) NOT NULL,
     description VARCHAR(1024),
-	release_date DATETIME,
+	release_date DATE,
 	pg TINYINT,
 	playtime_min SMALLINT UNSIGNED,
-	last_modified_at TIMESTAMP
+	last_modified_at TIMESTAMP,
+    deleted_at DATETIME
 	);
 	
 CREATE TABLE writer_movie (

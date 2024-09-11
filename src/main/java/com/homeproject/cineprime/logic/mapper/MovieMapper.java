@@ -13,10 +13,9 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Component
 public class MovieMapper {
 
@@ -43,8 +42,6 @@ public class MovieMapper {
         starService = starServiceAutowire;
     }
 
-
-
     public static MovieDto movieToDto(Movie movie) {
         if(!(movie instanceof Movie) ||movie == null) {
             throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movie.toString());
@@ -65,28 +62,28 @@ public class MovieMapper {
             returnValue.setWriterDtoList(movie.getWriterList()
                     .stream()
                     .map(WriterMapper::writerToDto)
-                    .toList());
+                    .collect(Collectors.toSet()));
         }
 
         if(movie.getDirectorList() != null) {
             returnValue.setDirectorDtoList(movie.getDirectorList()
                     .stream()
                     .map(DirectorMapper::directorToDto)
-                    .toList());
+                    .collect(Collectors.toSet()));
         }
 
         if(movie.getStarList() != null) {
             returnValue.setStarDtoList(movie.getStarList()
                     .stream()
                     .map(StarMapper::starToDto)
-                    .toList());
+                    .collect(Collectors.toSet()));
         }
 
         if(movie.getGenreList() != null) {
             returnValue.setGenreDtoList(movie.getGenreList()
                     .stream()
                     .map(GenreMapper::genreToDto)
-                    .toList());
+                    .collect(Collectors.toSet()));
         }
 
         return returnValue;
@@ -153,17 +150,15 @@ public class MovieMapper {
         movieDto.setPg(movieRequestJson.getPg());
         movieDto.setPlayTimeMin(movieRequestJson.getPlayTimeMin());
 
-        //TODO: refaktor Set-re?
-
         // transform arrays to list and create the list unique elements
-        List<String> genrePublicIdList = Arrays.stream(movieRequestJson.getGenrePublicIdList()).distinct().toList();
-        List<String> writerPublicIdList = Arrays.stream(movieRequestJson.getWriterPublicIdList()).distinct().toList();
-        List<String> directorPublicIdList = Arrays.stream(movieRequestJson.getDirectorPublicIdList()).distinct().toList();
-        List<String> starPublicIdList = Arrays.stream(movieRequestJson.getStarPublicIdList()).distinct().toList();
+        Set<String> genrePublicIdList = Arrays.stream(movieRequestJson.getGenrePublicIdList()).distinct().collect(Collectors.toSet());
+        Set<String> writerPublicIdList = Arrays.stream(movieRequestJson.getWriterPublicIdList()).distinct().collect(Collectors.toSet());
+        Set<String> directorPublicIdList = Arrays.stream(movieRequestJson.getDirectorPublicIdList()).distinct().collect(Collectors.toSet());
+        Set<String> starPublicIdList = Arrays.stream(movieRequestJson.getStarPublicIdList()).distinct().collect(Collectors.toSet());
 
         // creating genre dto list and set
         if(!genrePublicIdList.isEmpty()) {
-            List<GenreDto> genreDtoList = new ArrayList<GenreDto>();
+            Set<GenreDto> genreDtoList = new HashSet<>();
             for(String genrePublicId : genrePublicIdList) {
                 Optional<Genre> foundGenre = genreService.getGenreByPublicId(genrePublicId);
                 if(foundGenre.isPresent()) {
@@ -176,7 +171,7 @@ public class MovieMapper {
 
         // creating writer dto list
         if(!writerPublicIdList.isEmpty()) {
-            List<WriterDto> writerDtoList = new ArrayList<WriterDto>();
+            Set<WriterDto> writerDtoList = new HashSet<WriterDto>();
             for(String writerPublicId : writerPublicIdList) {
                 Optional<Writer> foundWriter = writerService.findByPublicId(writerPublicId);
                 if(foundWriter.isPresent()) {
@@ -188,10 +183,10 @@ public class MovieMapper {
         }
         // creating director dto list
         if(!directorPublicIdList.isEmpty()) {
-            List<DirectorDto> directorDtoList = new ArrayList<DirectorDto>();
+            Set<DirectorDto> directorDtoList = new HashSet<DirectorDto>();
             for(String directorPublicId : directorPublicIdList) {
                 Optional<Director> foundDirector = directorService.findByPublicId(directorPublicId);
-                if(foundDirector.isPresent()) {
+                if(foundDirector.isPresent() && foundDirector.get().getDeletedAt() == null) {
                     directorDtoList.add(
                             DirectorMapper.directorToDto(foundDirector.get()));
                 }
@@ -200,7 +195,7 @@ public class MovieMapper {
         }
         // star director dto list
         if(!starPublicIdList.isEmpty()) {
-            List<StarDto> starDtoList = new ArrayList<StarDto>();
+            Set<StarDto> starDtoList = new HashSet<StarDto>();
             for(String starPublicId : starPublicIdList) {
                 Optional<Star> foundStar = starService.findByPublicId(starPublicId);
                 if(foundStar.isPresent()) {
@@ -228,7 +223,7 @@ public class MovieMapper {
         returnValue.setLastModifiedAt(movieDto.getLastModifiedAt());
 
         // create writer to dto with validation
-        List<WriterDto> writerDtoList = movieDto.getWriterDtoList();
+        Set<WriterDto> writerDtoList = movieDto.getWriterDtoList();
         if(writerDtoList != null) {
         returnValue.setWriterList(movieDto.getWriterDtoList()
                 .stream()
@@ -237,7 +232,7 @@ public class MovieMapper {
         }
 
         // create director to dto with validation
-        List<DirectorDto> directorDtoList = movieDto.getDirectorDtoList();
+        Set<DirectorDto> directorDtoList = movieDto.getDirectorDtoList();
         if(directorDtoList != null) {
             returnValue.setDirectorList(movieDto.getDirectorDtoList()
                     .stream()
@@ -246,7 +241,7 @@ public class MovieMapper {
         }
 
         // create star to dto with validation
-        List<StarDto> starDtoList = movieDto.getStarDtoList();
+        Set<StarDto> starDtoList = movieDto.getStarDtoList();
         if(starDtoList != null) {
             returnValue.setStarList(movieDto.getStarDtoList()
                     .stream()
@@ -255,7 +250,7 @@ public class MovieMapper {
         }
 
         // create genre to dto with validation
-        List<GenreDto> genreDtoList = movieDto.getGenreDtoList();
+        Set<GenreDto> genreDtoList = movieDto.getGenreDtoList();
         if(genreDtoList != null) {
             returnValue.setGenreList(movieDto.getGenreDtoList()
                     .stream()

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,4 +26,5 @@ public class Director {
     @Embedded
     @Valid
     private PersonData personData;
+    private Date deletedAt;
 }

@@ -28,7 +28,7 @@ public class WriterService {
 
     @Transactional(readOnly = true)
     public List<WriterResponseJson> getAllWriterResponseJson() {
-        List<Writer> allWriter = writerRepository.findAll();
+        List<Writer> allWriter = writerRepository.findByDeletedAtIsNull();
         List<WriterDto> allWriterDto = allWriter
                 .stream()
                 .map(WriterMapper::writerToDto)
@@ -41,7 +41,7 @@ public class WriterService {
     }
 
     @Transactional(readOnly = true)
-    public WriterResponseJson getWriterResponseJsonById(String publicId) {
+    public WriterResponseJson getWriterResponseJsonById(String publicId) throws ResponseStatusException {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
@@ -50,7 +50,7 @@ public class WriterService {
                     """ + publicId);
         }
 
-        Optional<Writer> writer = writerRepository.findByPublicId(publicId);
+        Optional<Writer> writer = writerRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(writer.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Writer not found with ID: " + publicId);
@@ -64,7 +64,7 @@ public class WriterService {
         return returnValue;
     }
 
-    public WriterResponseJson createWriter(WriterRequestJson writerRequestJson) {
+    public WriterResponseJson createWriter(WriterRequestJson writerRequestJson) throws ResponseStatusException {
         if(!(writerRequestJson instanceof  WriterRequestJson) || writerRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -84,12 +84,12 @@ public class WriterService {
         return returnValue;
     }
 
-    public WriterResponseJson updateWriter(WriterRequestJson writerRequestJson) {
+    public WriterResponseJson updateWriter(WriterRequestJson writerRequestJson) throws ResponseStatusException {
         if(!(writerRequestJson instanceof  WriterRequestJson) || writerRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Writer> writerToUpdate = writerRepository.findByPublicId(writerRequestJson.getPublicId());
+        Optional<Writer> writerToUpdate = writerRepository.findByPublicIdAndDeletedAtIsNull(writerRequestJson.getPublicId());
 
         if(writerToUpdate.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Writer not found with ID: " + writerRequestJson.getPublicId());
@@ -110,7 +110,7 @@ public class WriterService {
         return returnValue;
     }
 
-    public String removeWriterByPublidId(String publicId) {
+    public String removeWriterByPublidId(String publicId) throws ResponseStatusException {
         if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -118,7 +118,7 @@ public class WriterService {
             );
         }
 
-        Optional<Writer> writer = writerRepository.findByPublicId(publicId);
+        Optional<Writer> writer = writerRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(writer.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Writer not found with ID: " + publicId);
@@ -130,6 +130,6 @@ public class WriterService {
     }
 
     public Optional<Writer> findByPublicId(String writerPublicId) {
-        return writerRepository.findByPublicId(writerPublicId);
+        return writerRepository.findByPublicIdAndDeletedAtIsNull(writerPublicId);
     }
 }

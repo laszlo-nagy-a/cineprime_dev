@@ -20,11 +20,11 @@ import com.homeproject.cineprime.logic.mapper.GenreMapper;
 @Service
 public class GenreService {
     private GenreRepository genreRepository;
-    public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) { this.genreRepository = genreRepository; };
+    public GenreService(GenreRepository genreRepository) { this.genreRepository = genreRepository; };
 
     @Transactional(readOnly = true)
     public List<GenreResponseJson> getAllGenreResponseJson() {
-        List<Genre> allGenre = genreRepository.findAll();
+        List<Genre> allGenre = genreRepository.findByDeletedAtIsNull();
         List<GenreDto> allGenreDto = allGenre
                 .stream()
                 .map(GenreMapper::genreToDto)
@@ -38,9 +38,8 @@ public class GenreService {
 
     //TODO: exception handling Transactionnalra
     @Transactional(readOnly = true)
-    public GenreResponseJson getGenreResponseJsonById(String publicId) {
+    public GenreResponseJson getGenreResponseJsonById(String publicId) throws ResponseStatusException {
         if(StringUtils.isEmpty(publicId)) {
-            // TODO: nem jelenik meg a végpont responseban a hiba oka, needs fix
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
                     The given ID is NULL or empty string, 
@@ -48,7 +47,7 @@ public class GenreService {
                     """ + publicId);
         }
 
-        Optional<Genre> genre = genreRepository.findByPublicId(publicId);
+        Optional<Genre> genre = genreRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(genre.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
@@ -62,7 +61,7 @@ public class GenreService {
         return returnValue;
     }
 
-    public GenreResponseJson createGenre(GenreRequestJson genreRequestJson) {
+    public GenreResponseJson createGenre(GenreRequestJson genreRequestJson) throws ResponseStatusException {
         if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -82,12 +81,12 @@ public class GenreService {
         return returnValue;
     }
 
-    public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) {
+    public GenreResponseJson updateGenre(GenreRequestJson genreRequestJson) throws ResponseStatusException {
         if(!(genreRequestJson instanceof  GenreRequestJson) || genreRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Genre> genreToUpdate = genreRepository.findByPublicId(genreRequestJson.getPublicId());
+        Optional<Genre> genreToUpdate = genreRepository.findByPublicIdAndDeletedAtIsNull(genreRequestJson.getPublicId());
 
         if(genreToUpdate.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + genreRequestJson.getPublicId());
@@ -108,7 +107,7 @@ public class GenreService {
         return returnValue;
     }
 
-    public String removeGenreByPublidId(String publicId) {
+    public String removeGenreByPublidId(String publicId) throws ResponseStatusException {
         if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -116,7 +115,7 @@ public class GenreService {
             );
         }
 
-        Optional<Genre> genre = genreRepository.findByPublicId(publicId);
+        Optional<Genre> genre = genreRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(genre.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
@@ -128,6 +127,6 @@ public class GenreService {
     }
 
     public Optional<Genre> getGenreByPublicId(String publicId) {
-        return genreRepository.findByPublicId(publicId);
+        return genreRepository.findByPublicIdAndDeletedAtIsNull(publicId);
     }
 }

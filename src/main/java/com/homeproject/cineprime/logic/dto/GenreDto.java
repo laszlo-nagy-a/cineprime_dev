@@ -8,11 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GenreDto {
-
-    private Long id;
-    private String publicId;
+public class GenreDto extends AbastractEntityDto{
     private String name;
     private List<Movie> movieList;
-
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -12,8 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-public class Genre{
-
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +29,5 @@ public class Genre{
             mappedBy = "genreList"
     )
     private List<Movie> movieList;
-
+    private Date deletedAt;
 }

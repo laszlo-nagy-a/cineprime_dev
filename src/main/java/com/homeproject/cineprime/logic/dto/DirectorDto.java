@@ -7,9 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class DirectorDto {
-    private Long id;
-    private String publicId;
+public class DirectorDto extends AbastractEntityDto {
     private String firstName;
     private String lastName;
     private Short age;

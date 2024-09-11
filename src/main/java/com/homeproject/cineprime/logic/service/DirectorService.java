@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +28,7 @@ public class DirectorService {
 
     @Transactional(readOnly = true)
     public List<DirectorResponseJson> getAllDirectorResponseJson() {
-
-        List<Director> allDirector = directorRepository.findAll();
+        List<Director> allDirector = directorRepository.findByDeletedAtIsNull();
         List<DirectorDto> allDirectorDto = allDirector
                 .stream()
                 .map(DirectorMapper::directorToDto)
@@ -40,7 +41,7 @@ public class DirectorService {
     }
 
     @Transactional(readOnly = true)
-    public DirectorResponseJson getDirectorResponseJsonByPublicId(String publicId) {
+    public DirectorResponseJson getDirectorResponseJsonByPublicId(String publicId) throws ResponseStatusException {
 
         if(publicId == null) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -51,9 +52,9 @@ public class DirectorService {
     }
 
 
-        Optional<Director> director = directorRepository.findByPublicId(publicId);
+        Optional<Director> director = directorRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
-        if(director.isEmpty()) {
+        if(director.isEmpty() || director.get().getDeletedAt() != null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + publicId);
         }
 
@@ -64,7 +65,7 @@ public class DirectorService {
         return returnValue;
     }
 
-    public DirectorResponseJson createDirector(DirectorRequestJson directorRequestJson) {
+    public DirectorResponseJson createDirector(DirectorRequestJson directorRequestJson) throws ResponseStatusException {
 
         if(!(directorRequestJson instanceof DirectorRequestJson) || directorRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
@@ -85,13 +86,13 @@ public class DirectorService {
         return returnValue;
     }
 
-    public DirectorResponseJson updateDirector(DirectorRequestJson directorRequestJson) {
+    public DirectorResponseJson updateDirector(DirectorRequestJson directorRequestJson) throws ResponseStatusException {
 
         if(!(directorRequestJson instanceof  DirectorRequestJson) || directorRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Director> directorToUpdate = directorRepository.findByPublicId(directorRequestJson.getPublicId());
+        Optional<Director> directorToUpdate = directorRepository.findByPublicIdAndDeletedAtIsNull(directorRequestJson.getPublicId());
 
         if(directorToUpdate.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + directorRequestJson.getPublicId());
@@ -114,7 +115,7 @@ public class DirectorService {
         return returnValue;
     }
 
-    public String removeDirectorByPublidId(String publicId) {
+    public String removeDirectorByPublidId(String publicId) throws ResponseStatusException {
 
         if(publicId == null) {
             throw new ResponseStatusException(
@@ -123,18 +124,21 @@ public class DirectorService {
             );
         }
 
-        Optional<Director> director = directorRepository.findByPublicId(publicId);
+        Optional<Director> director = directorRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(director.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Director not found with ID: " + publicId);
         }
 
-        directorRepository.delete(director.get());
+        Director directorToLogicallyDelete = director.get();
+        directorToLogicallyDelete.setDeletedAt(Date.from(Instant.now()));
+
+        directorRepository.save(directorToLogicallyDelete);
 
         return "Director with identifier: " + publicId + " successfully deleted!";
     }
 
     public Optional<Director> findByPublicId(String directorPublicId) {
-        return directorRepository.findByPublicId(directorPublicId);
+        return directorRepository.findByPublicIdAndDeletedAtIsNull(directorPublicId);
     }
 }

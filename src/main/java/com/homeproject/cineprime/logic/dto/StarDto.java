@@ -7,9 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class StarDto {
-    private Long id;
-    private String publicId;
+public class StarDto extends AbastractEntityDto {
     private String firstName;
     private String lastName;
     private Short age;

@@ -3,9 +3,6 @@ package com.homeproject.cineprime.domain.repository;
 import com.homeproject.cineprime.domain.model.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface GenreRepository extends JpaRepository<Genre, Long> {
-    Optional<Genre> findByPublicId(String publicId);
+public interface GenreRepository extends JpaRepository<Genre, Long>, AbstarctEntityRepository<Genre> {
 
 }

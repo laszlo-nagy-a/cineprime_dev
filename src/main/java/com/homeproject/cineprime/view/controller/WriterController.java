@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -50,5 +51,11 @@ public class WriterController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
         return ControllerExceptionHandler.handleValidationExceptions(exception);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResponseStatusException.class)
+    public Map<String, String> entityNotFoundExceptionHandler(ResponseStatusException exception) {
+        return ControllerExceptionHandler.handleNotFoundStatusExcetions(exception);
     }
 }

@@ -26,7 +26,7 @@ public class StarService {
 
     @Transactional(readOnly = true)
     public List<StarResponseJson> getAllStarResponseJson() {
-        List<Star> allStar = starRepository.findAll();
+        List<Star> allStar = starRepository.findByDeletedAtIsNull();
         List<StarDto> allStarDto = allStar
                 .stream()
                 .map(StarMapper::starToDto)
@@ -39,7 +39,7 @@ public class StarService {
     }
 
     @Transactional(readOnly = true)
-    public StarResponseJson getStarResponseJsonById(String publicId) {
+    public StarResponseJson getStarResponseJsonById(String publicId) throws ResponseStatusException {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
@@ -48,7 +48,7 @@ public class StarService {
                     """ + publicId);
         }
 
-        Optional<Star> star = starRepository.findByPublicId(publicId);
+        Optional<Star> star = starRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(star.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found with ID: " + publicId);
@@ -62,7 +62,7 @@ public class StarService {
         return returnValue;
     }
 
-    public StarResponseJson createStar(StarRequestJson starRequestJson) {
+    public StarResponseJson createStar(StarRequestJson starRequestJson) throws ResponseStatusException {
         if(!(starRequestJson instanceof StarRequestJson) || starRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -82,12 +82,12 @@ public class StarService {
         return returnValue;
     }
 
-    public StarResponseJson updateStar(StarRequestJson starRequestJson) {
+    public StarResponseJson updateStar(StarRequestJson starRequestJson) throws ResponseStatusException {
         if(!(starRequestJson instanceof StarRequestJson) || starRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Star> starToUpdate = starRepository.findByPublicId(starRequestJson.getPublicId());
+        Optional<Star> starToUpdate = starRepository.findByPublicIdAndDeletedAtIsNull(starRequestJson.getPublicId());
 
         if(starToUpdate.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Star not found with ID: " + starRequestJson.getPublicId());
@@ -108,7 +108,7 @@ public class StarService {
         return returnValue;
     }
 
-    public String removeStarByPublidId(String publicId) {
+    public String removeStarByPublidId(String publicId) throws ResponseStatusException {
         if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -116,7 +116,7 @@ public class StarService {
             );
         }
 
-        Optional<Star> star = starRepository.findByPublicId(publicId);
+        Optional<Star> star = starRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(star.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Star not found with ID: " + publicId);
@@ -128,6 +128,6 @@ public class StarService {
     }
 
     public Optional<Star> findByPublicId(String starPublicId) {
-        return starRepository.findByPublicId(starPublicId);
+        return starRepository.findByPublicIdAndDeletedAtIsNull(starPublicId);
     }
 }

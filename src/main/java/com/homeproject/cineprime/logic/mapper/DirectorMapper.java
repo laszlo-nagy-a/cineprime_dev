@@ -7,6 +7,8 @@ import com.homeproject.cineprime.view.request_json.DirectorRequestJson;
 import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+
 @Service
 public class DirectorMapper {
 
@@ -39,7 +41,6 @@ public class DirectorMapper {
         returnValue.setPublicId(directorDto.getPublicId());
         returnValue.setName(directorDto.getFirstName() + " " + directorDto.getLastName());
         returnValue.setAge(directorDto.getAge());
-        // TODO: dátum visszaadás formázása
         returnValue.setBirthDate(directorDto.getBithDate());
 
         return returnValue;

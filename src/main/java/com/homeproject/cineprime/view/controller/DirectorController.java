@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -41,16 +42,19 @@ public class DirectorController {
         return directorService.updateDirector(request);
     }
 
-    // TODO: törlés logikailag a kapcsolódó entitások miatt?
     @DeleteMapping("/{director-id}")
     public String removeDriectorById(@PathVariable("director-id") String publicId) {
         return directorService.removeDirectorByPublidId(publicId);
     }
 
-    //TODO: hiba kezelés így jó lehet jakarta validationnal?
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
         return ControllerExceptionHandler.handleValidationExceptions(exception);
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResponseStatusException.class)
+    public Map<String, String> entityNotFoundExceptionHandler(ResponseStatusException exception) {
+        return ControllerExceptionHandler.handleNotFoundStatusExcetions(exception);
     }
 }

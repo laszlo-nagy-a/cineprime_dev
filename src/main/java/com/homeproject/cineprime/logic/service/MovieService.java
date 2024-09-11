@@ -27,7 +27,7 @@ public class MovieService {
 
     @Transactional(readOnly = true)
     public List<MovieResponseJson> getAllMovieResponseJson() {
-        List<Movie> allMovies = movieRepository.findAll();
+        List<Movie> allMovies = movieRepository.findByDeletedAtIsNull();
         List<MovieDto> allMovieDto = allMovies
                 .stream()
                 .map(MovieMapper::movieToDto)
@@ -40,7 +40,7 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public MovieResponseJson getMovieByPublicId(String publicId) {
+    public MovieResponseJson getMovieByPublicId(String publicId) throws ResponseStatusException {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
@@ -49,7 +49,7 @@ public class MovieService {
                     """ + publicId);
         }
 
-        Optional<Movie> movie = movieRepository.findByPublicId(publicId);
+        Optional<Movie> movie = movieRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(movie.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + publicId);
@@ -63,7 +63,7 @@ public class MovieService {
         return returnValue;
     }
 
-    public MovieResponseJson createMovie(MovieRequestJson movieRequestJson) {
+    public MovieResponseJson createMovie(MovieRequestJson movieRequestJson) throws ResponseStatusException {
         if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
@@ -83,12 +83,12 @@ public class MovieService {
         return returnValue;
     }
 
-    public MovieResponseJson updateMovie(MovieRequestJson movieRequestJson) {
+    public MovieResponseJson updateMovie(MovieRequestJson movieRequestJson) throws ResponseStatusException {
         if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
-        Optional<Movie> movieToUpdate = movieRepository.findByPublicId(movieRequestJson.getPublicId());
+        Optional<Movie> movieToUpdate = movieRepository.findByPublicIdAndDeletedAtIsNull(movieRequestJson.getPublicId());
 
         if(movieToUpdate.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found with ID: " + movieRequestJson.getPublicId());
@@ -109,7 +109,7 @@ public class MovieService {
         return returnValue;
     }
 
-    public String deleteMovie(Long id) {
+    public String deleteMovie(Long id) throws ResponseStatusException {
         if(id == null) {
             throw new IllegalArgumentException("The identifier is null. Give a valid identifier number!");
         }
