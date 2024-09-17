@@ -15,8 +15,8 @@ public class MovieResponseJson {
     private Date releaseDate;
     private Byte pg;
     private Short playTimeMin;
-    private List<WriterResponseJson> writerResponseJsonList;
-    private List<DirectorResponseJson> directorResponseJsonList;
-    private List<StarResponseJson> starResponseJsonList;
-    private List<GenreResponseJson> genreResponseJsonList;
+    private List<String> writerPublicIdJsonList;
+    private List<String> directorPublicIdJsonList;
+    private List<String> starPublicIdJsonList;
+    private List<String> genrePublicIdJsonList;
 }

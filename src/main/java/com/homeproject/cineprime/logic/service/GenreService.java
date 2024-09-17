@@ -36,7 +36,6 @@ public class GenreService {
                 .toList();
     }
 
-    //TODO: exception handling Transactionnalra
     @Transactional(readOnly = true)
     public GenreResponseJson getGenreResponseJsonById(String publicId) throws ResponseStatusException {
         if(StringUtils.isEmpty(publicId)) {

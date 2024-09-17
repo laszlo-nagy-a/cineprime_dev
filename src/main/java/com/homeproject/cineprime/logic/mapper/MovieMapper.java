@@ -10,6 +10,7 @@ import com.homeproject.cineprime.logic.service.WriterService;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,33 +18,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 public class MovieMapper {
 
-    private static GenreService genreService;
-    private static WriterService writerService;
-    private static DirectorService directorService;
-    private static StarService starService;
-
     @Autowired
-    private GenreService genreServiceAutowire;
+    private final GenreService genreService;
     @Autowired
-    private WriterService writerServiceAutowire;
+    private final WriterService writerService;
     @Autowired
-    private DirectorService directorServiceAutowire;
+    private final DirectorService directorService;
     @Autowired
-    private StarService starServiceAutowire;
-
-    // TODO: application context használata inkább?
-    @PostConstruct
-    private void initServices() {
-        genreService = genreServiceAutowire;
-        writerService = writerServiceAutowire;
-        directorService = directorServiceAutowire;
-        starService = starServiceAutowire;
-    }
+    private final StarService starService;
 
     public static MovieDto movieToDto(Movie movie) {
-        if(!(movie instanceof Movie) ||movie == null) {
+        if(!(movie instanceof Movie) || movie == null) {
             throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movie.toString());
         }
 
@@ -57,7 +45,6 @@ public class MovieMapper {
         returnValue.setPlayTimeMin(movie.getPlayTimeMin());
         returnValue.setLastModifiedAt(movie.getLastModifiedAt());
 
-        //TODO: generikus készítése ennek implementálásával?
         if(movie.getWriterList() != null) {
             returnValue.setWriterDtoList(movie.getWriterList()
                     .stream()
@@ -90,7 +77,7 @@ public class MovieMapper {
     }
 
     public static MovieResponseJson dtoToResponse(MovieDto movieDto) {
-        if(!(movieDto instanceof MovieDto) ||movieDto == null) {
+        if(!(movieDto instanceof MovieDto) || movieDto == null) {
             throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieDto.toString());
         }
 
@@ -104,41 +91,41 @@ public class MovieMapper {
 
         // set writerResponse to movieDto with validation
         if(movieDto.getWriterDtoList() != null) {
-            returnValue.setWriterResponseJsonList(movieDto.getWriterDtoList()
+            returnValue.setWriterPublicIdJsonList(movieDto.getWriterDtoList()
                     .stream()
-                    .map(WriterMapper::dtoToResponse)
+                    .map(writerDto -> writerDto.getPublicId())
                     .toList());
         }
 
         // set directorResponse to movieDto with validation
         if(movieDto.getDirectorDtoList() != null) {
-            returnValue.setDirectorResponseJsonList(movieDto.getDirectorDtoList()
+            returnValue.setDirectorPublicIdJsonList(movieDto.getDirectorDtoList()
                     .stream()
-                    .map(DirectorMapper::dtoToResponse)
+                    .map(directorDto -> directorDto.getPublicId())
                     .toList());
         }
 
         // set starResponse to movieDto with validation
         if(movieDto.getStarDtoList() != null) {
-            returnValue.setStarResponseJsonList(movieDto.getStarDtoList()
+            returnValue.setStarPublicIdJsonList(movieDto.getStarDtoList()
                     .stream()
-                    .map(StarMapper::dtoToResponse)
+                    .map(starDto -> starDto.getPublicId())
                     .toList());
         }
 
         // set genreResponse to movieDto with validation
         if(movieDto.getGenreDtoList() != null) {
-            returnValue.setGenreResponseJsonList(movieDto.getGenreDtoList()
+            returnValue.setGenrePublicIdJsonList(movieDto.getGenreDtoList()
                     .stream()
-                    .map(GenreMapper::dtoToResponse)
+                    .map(genreDto -> genreDto.getPublicId())
                     .toList());
         }
 
         return returnValue;
     }
 
-    public static MovieDto requestToDto(MovieRequestJson movieRequestJson) {
-        if(!(movieRequestJson instanceof MovieRequestJson) ||movieRequestJson == null) {
+    public MovieDto requestToDto(MovieRequestJson movieRequestJson) {
+        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
             throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieRequestJson.toString());
         }
 
@@ -208,7 +195,7 @@ public class MovieMapper {
         return movieDto;
     }
 
-    public static Movie dtoToMovie(MovieDto movieDto) {
+    public Movie dtoToMovie(MovieDto movieDto) {
         if(!(movieDto instanceof MovieDto) ||movieDto == null) {
             throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieDto.toString());
         }

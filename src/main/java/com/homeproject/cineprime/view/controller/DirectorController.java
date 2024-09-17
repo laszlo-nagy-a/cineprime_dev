@@ -23,9 +23,13 @@ public class DirectorController {
         this.directorService = directorService;
     }
 
+    // TODO: kereső megvalósítás: paraméterek: title - type (search, type, mennyitől, meddig) -> oldalak megvalósítása
     @GetMapping
-    public List<DirectorResponseJson> findAllDirector() {
-        return directorService.getAllDirectorResponseJson();
+    public List<DirectorResponseJson> findAllDirector(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search
+    ) {
+        return directorService.getAllDirectorResponseJson(type, search);
     }
     @GetMapping("/{director-public-id}")
     public DirectorResponseJson findDirector(@PathVariable("director-public-id") String publicId) {

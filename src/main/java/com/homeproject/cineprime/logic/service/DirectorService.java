@@ -10,12 +10,14 @@ import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class DirectorService {
@@ -27,9 +29,13 @@ public class DirectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<DirectorResponseJson> getAllDirectorResponseJson() {
-        List<Director> allDirector = directorRepository.findByDeletedAtIsNull();
-        List<DirectorDto> allDirectorDto = allDirector
+    public List<DirectorResponseJson> getAllDirectorResponseJson(String type, String search) throws HttpStatusCodeException {
+
+        List<Director> resultSet = new ArrayList<>();
+
+        resultSet = directorSearchByType(type, search);
+
+        List<DirectorDto> allDirectorDto = resultSet
                 .stream()
                 .map(DirectorMapper::directorToDto)
                 .toList();
@@ -141,4 +147,31 @@ public class DirectorService {
     public Optional<Director> findByPublicId(String directorPublicId) {
         return directorRepository.findByPublicIdAndDeletedAtIsNull(directorPublicId);
     }
+
+    //Director kereső
+    public List<Director> directorSearchByType (String type, String search) {
+        List<Director> resultSet = new ArrayList<>();
+        try {
+            switch (type) {
+                case "firstname":
+                    resultSet.addAll(directorRepository.findByPersonData_FirstNameContains(search));
+                    break;
+                case "lastname":
+                    resultSet.addAll(directorRepository.findByPersonData_LastNameContains(search));
+                case "age":
+                    resultSet.addAll(directorRepository.findByPersonData_AgeEquals(Short.valueOf(search)));
+                case "birthdate":
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    resultSet.addAll(directorRepository.findByPersonData_BirthdateEquals(formatter.parse(search)));
+                    break;
+                default:
+                    resultSet.addAll(directorRepository.findByDeletedAtIsNull());
+            }
+        } catch (
+                ParseException parseExceptionx) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A dátum nem helyes formátumú. Lekérdezés a következőképpen: 'yyyy-mm-dd' ");
+        }
+        return resultSet;
+    }
+
 }

@@ -21,8 +21,11 @@ public class MovieService {
 
     private final MovieRepository movieRepository;
 
-    public MovieService (MovieRepository movieRepository) {
+    private final MovieMapper movieMapper;
+
+    public MovieService (MovieRepository movieRepository, MovieMapper movieMapper) {
         this.movieRepository = movieRepository;
+        this.movieMapper = movieMapper;
     }
 
     @Transactional(readOnly = true)
@@ -69,10 +72,10 @@ public class MovieService {
         }
 
         MovieDto movieDto = new MovieDto();
-        movieDto = MovieMapper.requestToDto(movieRequestJson);
+        movieDto = movieMapper.requestToDto(movieRequestJson);
 
         Movie newEntity = new Movie();
-        newEntity = MovieMapper.dtoToMovie(movieDto);
+        newEntity = movieMapper.dtoToMovie(movieDto);
         newEntity.setPublicId(PublicIdGenerator.generateId(30));
 
         Movie savedMovie = movieRepository.save(newEntity);
@@ -96,8 +99,8 @@ public class MovieService {
 
         Movie movie = new Movie();
         MovieDto movieDto = new MovieDto();
-        movieDto = MovieMapper.requestToDto(movieRequestJson);
-        movie = MovieMapper.dtoToMovie(movieDto);
+        movieDto = movieMapper.requestToDto(movieRequestJson);
+        movie = movieMapper.dtoToMovie(movieDto);
 
         movie.setId(movieToUpdate.get().getId());
         Movie updatedMovie = movieRepository.save(movie);

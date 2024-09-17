@@ -38,7 +38,6 @@ public class StarController {
         return starService.createStar(request);
     }
 
-    //TODO: egységesíteni kellene a requesteket, hogy az azonosítót URL-ből kapja?
     @PutMapping
     public StarResponseJson updateStar(@Valid @RequestBody StarRequestJson request) {
         return starService.updateStar(request);
