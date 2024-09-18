@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("directors")
@@ -27,9 +28,11 @@ public class DirectorController {
     @GetMapping
     public List<DirectorResponseJson> findAllDirector(
             @RequestParam(required = false) String type,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Optional<Integer> pagenumber,
+            @RequestParam(required = false) Optional<Integer> pagesize
     ) {
-        return directorService.getAllDirectorResponseJson(type, search);
+        return directorService.getAllDirectorResponseJson(type, search, pagenumber, pagesize);
     }
     @GetMapping("/{director-public-id}")
     public DirectorResponseJson findDirector(@PathVariable("director-public-id") String publicId) {

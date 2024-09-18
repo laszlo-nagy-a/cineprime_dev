@@ -8,6 +8,8 @@ import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,8 @@ public class MovieService {
 
     @Transactional(readOnly = true)
     public List<MovieResponseJson> getAllMovieResponseJson() {
-        List<Movie> allMovies = movieRepository.findByDeletedAtIsNull();
+        Pageable config = PageRequest.of(0, 2);
+        List<Movie> allMovies = movieRepository.findByDeletedAtIsNull(config);
         List<MovieDto> allMovieDto = allMovies
                 .stream()
                 .map(MovieMapper::movieToDto)

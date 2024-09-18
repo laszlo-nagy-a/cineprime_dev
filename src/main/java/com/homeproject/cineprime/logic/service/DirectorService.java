@@ -5,8 +5,13 @@ import com.homeproject.cineprime.domain.repository.DirectorRepository;
 import com.homeproject.cineprime.logic.dto.DirectorDto;
 import com.homeproject.cineprime.logic.mapper.DirectorMapper;
 import com.homeproject.cineprime.logic.util.PublicIdGenerator;
+import com.homeproject.cineprime.logic.util.SearchType;
 import com.homeproject.cineprime.view.request_json.DirectorRequestJson;
 import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
+import com.sun.jdi.InvalidTypeException;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,25 +21,27 @@ import org.springframework.web.server.ResponseStatusException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class DirectorService {
 
-    private DirectorRepository directorRepository;
+    private final DirectorRepository directorRepository;
 
     public DirectorService(DirectorRepository directorRepository) {
         this.directorRepository = directorRepository;
     }
 
     @Transactional(readOnly = true)
-    public List<DirectorResponseJson> getAllDirectorResponseJson(String type, String search) throws HttpStatusCodeException {
+    public List<DirectorResponseJson> getAllDirectorResponseJson(String type, String search, Optional<Integer> pageNumber, Optional<Integer> pageSize) throws HttpStatusCodeException {
 
-        List<Director> resultSet = new ArrayList<>();
+        List<Director> resultSet = directorSearchByType(type, search, pageNumber, pageSize);
 
-        resultSet = directorSearchByType(type, search);
+        if(resultSet.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Directors not found with these conditions, try with another!" );
+        }
 
+        // TODO: strema filterrel megoldani, a keresést dinamikusan -> type változó alapján meg kell határozni, hogy melyik field alapján kell a keywordot futtatni
         List<DirectorDto> allDirectorDto = resultSet
                 .stream()
                 .map(DirectorMapper::directorToDto)
@@ -57,7 +64,6 @@ public class DirectorService {
                 """ + publicId);
     }
 
-
         Optional<Director> director = directorRepository.findByPublicIdAndDeletedAtIsNull(publicId);
 
         if(director.isEmpty() || director.get().getDeletedAt() != null) {
@@ -73,7 +79,7 @@ public class DirectorService {
 
     public DirectorResponseJson createDirector(DirectorRequestJson directorRequestJson) throws ResponseStatusException {
 
-        if(!(directorRequestJson instanceof DirectorRequestJson) || directorRequestJson == null) {
+        if(directorRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -94,7 +100,7 @@ public class DirectorService {
 
     public DirectorResponseJson updateDirector(DirectorRequestJson directorRequestJson) throws ResponseStatusException {
 
-        if(!(directorRequestJson instanceof  DirectorRequestJson) || directorRequestJson == null) {
+        if(directorRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -148,30 +154,60 @@ public class DirectorService {
         return directorRepository.findByPublicIdAndDeletedAtIsNull(directorPublicId);
     }
 
-    //Director kereső
-    public List<Director> directorSearchByType (String type, String search) {
+    public List<Director> directorSearchByType (String type, String search, Optional<Integer> pageNumberOptional, Optional<Integer> pageSizeOptinal) {
+
+        Integer pageNumber = pageNumberOptional.orElse(0);
+        Integer pageSize = pageSizeOptinal.orElse(10);
+
+        Pageable pageConfig = PageRequest.of(pageNumber, pageSize);
+
+        List<Director> resultSet = new ArrayList<>();
+
+        if(type == null) {
+            resultSet.addAll(directorRepository.findByDeletedAtIsNull(pageConfig));
+            return resultSet;
+        }
+
+        return searchByTypeAndSearch(type, search, pageConfig);
+    }
+
+    public List<Director> searchByTypeAndSearch(String type, String search, Pageable pageConfig) throws ResponseStatusException {
         List<Director> resultSet = new ArrayList<>();
         try {
             switch (type) {
-                case "firstname":
-                    resultSet.addAll(directorRepository.findByPersonData_FirstNameContains(search));
+                case SearchType.FIRST_NAME:
+                    resultSet.addAll(directorRepository.findByDeletedAtIsNullAndPersonData_FirstNameContains(pageConfig, search));
                     break;
-                case "lastname":
-                    resultSet.addAll(directorRepository.findByPersonData_LastNameContains(search));
-                case "age":
-                    resultSet.addAll(directorRepository.findByPersonData_AgeEquals(Short.valueOf(search)));
-                case "birthdate":
+
+                case SearchType.LAST_NAME:
+                    resultSet.addAll(directorRepository.findByDeletedAtIsNullAndPersonData_LastNameContains(pageConfig, search));
+                    break;
+
+                case SearchType.AGE:
+                    resultSet.addAll(
+                            directorRepository.findByDeletedAtIsNullAndPersonData_AgeEquals(pageConfig, Short.valueOf(search)));
+                    break;
+
+                case SearchType.BIRTH_DATE:
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                    resultSet.addAll(directorRepository.findByPersonData_BirthdateEquals(formatter.parse(search)));
+                    resultSet.addAll(directorRepository.findByDeletedAtIsNullAndPersonData_BirthdateEquals(pageConfig, formatter.parse(search)));
                     break;
+
                 default:
-                    resultSet.addAll(directorRepository.findByDeletedAtIsNull());
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "Not compatible type! Try with these type values: "
+                                    .concat(SearchType.FIRST_NAME + " OR ")
+                                    .concat(SearchType.FIRST_NAME + " OR ")
+                                    .concat(SearchType.AGE + " OR ")
+                                    .concat(SearchType.BIRTH_DATE));
+
             }
-        } catch (
-                ParseException parseExceptionx) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A dátum nem helyes formátumú. Lekérdezés a következőképpen: 'yyyy-mm-dd' ");
+        } catch (ParseException parseExceptionx) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The date format is incorrect! Try with this format: 'yyyy-mm-dd' ");
+        } catch (NumberFormatException numberFormatException) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The number format is not correct, try with integer number.");
         }
+
         return resultSet;
     }
-
 }

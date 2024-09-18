@@ -27,9 +27,6 @@ public class PersonData {
     @NotBlank
     private String lastName;
     private Short age;
-    @Column(
-            columnDefinition = ""
-    )
     @Temporal(TemporalType.DATE)
     private Date birthdate;
 }

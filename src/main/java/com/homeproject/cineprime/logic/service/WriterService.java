@@ -8,6 +8,8 @@ import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.WriterRequestJson;
 import com.homeproject.cineprime.view.response_json.WriterResponseJson;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,8 @@ public class WriterService {
 
     @Transactional(readOnly = true)
     public List<WriterResponseJson> getAllWriterResponseJson() {
-        List<Writer> allWriter = writerRepository.findByDeletedAtIsNull();
+        Pageable config = PageRequest.of(0, 2);
+        List<Writer> allWriter = writerRepository.findByDeletedAtIsNull(config);
         List<WriterDto> allWriterDto = allWriter
                 .stream()
                 .map(WriterMapper::writerToDto)

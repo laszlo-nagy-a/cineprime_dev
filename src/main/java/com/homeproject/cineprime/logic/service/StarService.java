@@ -8,6 +8,8 @@ import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.StarRequestJson;
 import com.homeproject.cineprime.view.response_json.StarResponseJson;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +27,10 @@ public class StarService {
     }
 
     @Transactional(readOnly = true)
+
     public List<StarResponseJson> getAllStarResponseJson() {
-        List<Star> allStar = starRepository.findByDeletedAtIsNull();
+        Pageable config = PageRequest.of(0, 2);
+        List<Star> allStar = starRepository.findByDeletedAtIsNull(config);
         List<StarDto> allStarDto = allStar
                 .stream()
                 .map(StarMapper::starToDto)

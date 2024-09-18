@@ -7,6 +7,8 @@ import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.GenreRequestJson;
 import com.homeproject.cineprime.view.response_json.GenreResponseJson;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,8 @@ public class GenreService {
 
     @Transactional(readOnly = true)
     public List<GenreResponseJson> getAllGenreResponseJson() {
-        List<Genre> allGenre = genreRepository.findByDeletedAtIsNull();
+        Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+        List<Genre> allGenre = genreRepository.findByDeletedAtIsNull(firstPageWithTwoElements);
         List<GenreDto> allGenreDto = allGenre
                 .stream()
                 .map(GenreMapper::genreToDto)
