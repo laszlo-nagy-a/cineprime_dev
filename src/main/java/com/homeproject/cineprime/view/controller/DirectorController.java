@@ -17,8 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("directors")
 public class DirectorController {
-
-    private DirectorService directorService;
+    private final DirectorService directorService;
 
     public DirectorController(DirectorService directorService) {
         this.directorService = directorService;
@@ -29,10 +28,10 @@ public class DirectorController {
     public List<DirectorResponseJson> findAllDirector(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Optional<Integer> pagenumber,
-            @RequestParam(required = false) Optional<Integer> pagesize
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
     ) {
-        return directorService.getAllDirectorResponseJson(type, search, pagenumber, pagesize);
+        return directorService.getAllDirectorResponseJson(type, search, pageSize, pageNumber);
     }
     @GetMapping("/{director-public-id}")
     public DirectorResponseJson findDirector(@PathVariable("director-public-id") String publicId) {
@@ -50,7 +49,7 @@ public class DirectorController {
     }
 
     @DeleteMapping("/{director-id}")
-    public String removeDriectorById(@PathVariable("director-id") String publicId) {
+    public String removeDirectorById(@PathVariable("director-id") String publicId) {
         return directorService.removeDirectorByPublidId(publicId);
     }
 

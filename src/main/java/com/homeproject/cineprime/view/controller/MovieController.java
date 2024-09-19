@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
-
-    private MovieService movieService;
+    private final MovieService movieService;
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
@@ -29,8 +29,13 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<MovieResponseJson> findAllMovie() {
-        return movieService.getAllMovieResponseJson();
+    public List<MovieResponseJson> findAllMovie(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
+    ) {
+        return movieService.getAllMovieResponseJson(type, search, pageSize, pageNumber);
     }
 
     @PostMapping

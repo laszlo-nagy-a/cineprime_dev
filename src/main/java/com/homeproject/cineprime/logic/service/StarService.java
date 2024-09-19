@@ -4,39 +4,44 @@ import com.homeproject.cineprime.domain.model.Star;
 import com.homeproject.cineprime.domain.repository.StarRepository;
 import com.homeproject.cineprime.logic.dto.StarDto;
 import com.homeproject.cineprime.logic.mapper.StarMapper;
+import com.homeproject.cineprime.logic.service.search.StarSearchService;
 import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.StarRequestJson;
 import com.homeproject.cineprime.view.response_json.StarResponseJson;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StarService {
 
-    private StarRepository starRepository;
-    public StarService(StarRepository starRepository) {
+    private final StarRepository starRepository;
+    private final StarSearchService starSearchService;
+    public StarService(StarRepository starRepository, StarSearchService starSearchService) {
         this.starRepository = starRepository;
+        this.starSearchService = starSearchService;
     }
 
     @Transactional(readOnly = true)
+    public List<StarResponseJson> getAllStarResponseJson(String type, String search, Optional<Integer> pageSizeOptional, Optional<Integer> pageNumberOptional) throws ResponseStatusException  {
+        List<Star> resultSet = new ArrayList<>();
+        resultSet = starSearchService.searchByTypeAndSearch(type, search, pageSizeOptional, pageNumberOptional);
 
-    public List<StarResponseJson> getAllStarResponseJson() {
-        Pageable config = PageRequest.of(0, 2);
-        List<Star> allStar = starRepository.findByDeletedAtIsNull(config);
-        List<StarDto> allStarDto = allStar
+        if(resultSet.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Directors not found with these conditions, try with another!" );
+        }
+        List<StarDto> resultStarDto = resultSet
                 .stream()
                 .map(StarMapper::starToDto)
                 .toList();
 
-        return allStarDto
+        return resultStarDto
                 .stream()
                 .map(StarMapper::dtoToResponse)
                 .toList();
@@ -47,8 +52,8 @@ public class StarService {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
-                    The given ID is NULL or empty string, 
-                    try with another ID! Given ID: 
+                    The given ID is NULL or empty string,
+                    try with another ID! Given ID:
                     """ + publicId);
         }
 
@@ -67,7 +72,7 @@ public class StarService {
     }
 
     public StarResponseJson createStar(StarRequestJson starRequestJson) throws ResponseStatusException {
-        if(!(starRequestJson instanceof StarRequestJson) || starRequestJson == null) {
+        if(starRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -87,7 +92,7 @@ public class StarService {
     }
 
     public StarResponseJson updateStar(StarRequestJson starRequestJson) throws ResponseStatusException {
-        if(!(starRequestJson instanceof StarRequestJson) || starRequestJson == null) {
+        if(starRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -112,7 +117,7 @@ public class StarService {
         return returnValue;
     }
 
-    public String removeStarByPublidId(String publicId) throws ResponseStatusException {
+    public String removeStarByPublicId(String publicId) throws ResponseStatusException {
         if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

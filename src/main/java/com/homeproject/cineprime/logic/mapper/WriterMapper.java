@@ -9,8 +9,8 @@ import com.homeproject.cineprime.view.response_json.WriterResponseJson;
 public class WriterMapper {
     public static WriterDto writerToDto(Writer writer) {
 
-        if(!(writer instanceof Writer) ||writer == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + writer.toString());
+        if(writer == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         PersonData personData = writer.getPersonData();
@@ -28,8 +28,8 @@ public class WriterMapper {
 
     public static WriterResponseJson dtoToResponse(WriterDto writerDto) {
 
-        if(!(writerDto instanceof WriterDto) ||writerDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + writerDto.toString());
+        if(writerDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         WriterResponseJson returnValue = new WriterResponseJson();
@@ -44,8 +44,8 @@ public class WriterMapper {
 
     public static WriterDto requestToDto(WriterRequestJson writerRequestJson) {
 
-        if(!(writerRequestJson instanceof WriterRequestJson) ||writerRequestJson == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + writerRequestJson.toString());
+        if(writerRequestJson == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         WriterDto returnValue = new WriterDto();
@@ -61,8 +61,8 @@ public class WriterMapper {
 
     public static Writer dtoToWriter(WriterDto writerDto) {
 
-        if(!(writerDto instanceof WriterDto) ||writerDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + writerDto.toString());
+        if(writerDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         Writer returnValue = new Writer();

@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("writers")
 public class WriterController {
-
-    private WriterService writerService;
+    private final WriterService writerService;
 
     public WriterController (WriterService writerService) {
         this.writerService = writerService;
@@ -28,8 +28,13 @@ public class WriterController {
         return writerService.getWriterResponseJsonById(publicId);
     }
     @GetMapping
-    public List<WriterResponseJson> findAllWriter() {
-        return writerService.getAllWriterResponseJson();
+    public List<WriterResponseJson> findAllWriter(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
+    ) {
+        return writerService.getAllWriterResponseJson(type, search, pageSize, pageNumber);
     }
 
     @PostMapping
@@ -44,7 +49,7 @@ public class WriterController {
 
     @DeleteMapping("/{writer-id}")
     public String removeWriterById(@PathVariable("writer-id")String publicId) {
-        return writerService.removeWriterByPublidId(publicId);
+        return writerService.removeWriterByPublicId(publicId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

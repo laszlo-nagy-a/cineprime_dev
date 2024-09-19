@@ -9,9 +9,7 @@ import com.homeproject.cineprime.logic.service.StarService;
 import com.homeproject.cineprime.logic.service.WriterService;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -20,19 +18,14 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class MovieMapper {
-
-    @Autowired
     private final GenreService genreService;
-    @Autowired
     private final WriterService writerService;
-    @Autowired
     private final DirectorService directorService;
-    @Autowired
     private final StarService starService;
 
     public static MovieDto movieToDto(Movie movie) {
-        if(!(movie instanceof Movie) || movie == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movie.toString());
+        if(movie == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         MovieDto returnValue = new MovieDto();
@@ -77,8 +70,8 @@ public class MovieMapper {
     }
 
     public static MovieResponseJson dtoToResponse(MovieDto movieDto) {
-        if(!(movieDto instanceof MovieDto) || movieDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieDto.toString());
+        if(movieDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         MovieResponseJson returnValue = new MovieResponseJson();
@@ -93,7 +86,7 @@ public class MovieMapper {
         if(movieDto.getWriterDtoList() != null) {
             returnValue.setWriterPublicIdJsonList(movieDto.getWriterDtoList()
                     .stream()
-                    .map(writerDto -> writerDto.getPublicId())
+                    .map(AbastractEntityDto::getPublicId)
                     .toList());
         }
 
@@ -101,7 +94,7 @@ public class MovieMapper {
         if(movieDto.getDirectorDtoList() != null) {
             returnValue.setDirectorPublicIdJsonList(movieDto.getDirectorDtoList()
                     .stream()
-                    .map(directorDto -> directorDto.getPublicId())
+                    .map(AbastractEntityDto::getPublicId)
                     .toList());
         }
 
@@ -109,7 +102,7 @@ public class MovieMapper {
         if(movieDto.getStarDtoList() != null) {
             returnValue.setStarPublicIdJsonList(movieDto.getStarDtoList()
                     .stream()
-                    .map(starDto -> starDto.getPublicId())
+                    .map(AbastractEntityDto::getPublicId)
                     .toList());
         }
 
@@ -117,7 +110,7 @@ public class MovieMapper {
         if(movieDto.getGenreDtoList() != null) {
             returnValue.setGenrePublicIdJsonList(movieDto.getGenreDtoList()
                     .stream()
-                    .map(genreDto -> genreDto.getPublicId())
+                    .map(AbastractEntityDto::getPublicId)
                     .toList());
         }
 
@@ -125,8 +118,8 @@ public class MovieMapper {
     }
 
     public MovieDto requestToDto(MovieRequestJson movieRequestJson) {
-        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieRequestJson.toString());
+        if(movieRequestJson == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         MovieDto movieDto = new MovieDto();
@@ -138,39 +131,35 @@ public class MovieMapper {
         movieDto.setPlayTimeMin(movieRequestJson.getPlayTimeMin());
 
         // transform arrays to list and create the list unique elements
-        Set<String> genrePublicIdList = Arrays.stream(movieRequestJson.getGenrePublicIdList()).distinct().collect(Collectors.toSet());
-        Set<String> writerPublicIdList = Arrays.stream(movieRequestJson.getWriterPublicIdList()).distinct().collect(Collectors.toSet());
-        Set<String> directorPublicIdList = Arrays.stream(movieRequestJson.getDirectorPublicIdList()).distinct().collect(Collectors.toSet());
-        Set<String> starPublicIdList = Arrays.stream(movieRequestJson.getStarPublicIdList()).distinct().collect(Collectors.toSet());
+        Set<String> genrePublicIdList = Arrays.stream(movieRequestJson.getGenrePublicIdList()).collect(Collectors.toSet());
+        Set<String> writerPublicIdList = Arrays.stream(movieRequestJson.getWriterPublicIdList()).collect(Collectors.toSet());
+        Set<String> directorPublicIdList = Arrays.stream(movieRequestJson.getDirectorPublicIdList()).collect(Collectors.toSet());
+        Set<String> starPublicIdList = Arrays.stream(movieRequestJson.getStarPublicIdList()).collect(Collectors.toSet());
 
         // creating genre dto list and set
         if(!genrePublicIdList.isEmpty()) {
             Set<GenreDto> genreDtoList = new HashSet<>();
             for(String genrePublicId : genrePublicIdList) {
                 Optional<Genre> foundGenre = genreService.getGenreByPublicId(genrePublicId);
-                if(foundGenre.isPresent()) {
-                    genreDtoList.add(
-                            GenreMapper.genreToDto(foundGenre.get()));
-                }
+                foundGenre.ifPresent(genre -> genreDtoList.add(
+                        GenreMapper.genreToDto(genre)));
             }
             movieDto.setGenreDtoList(genreDtoList);
         }
 
         // creating writer dto list
         if(!writerPublicIdList.isEmpty()) {
-            Set<WriterDto> writerDtoList = new HashSet<WriterDto>();
+            Set<WriterDto> writerDtoList = new HashSet<>();
             for(String writerPublicId : writerPublicIdList) {
                 Optional<Writer> foundWriter = writerService.findByPublicId(writerPublicId);
-                if(foundWriter.isPresent()) {
-                    writerDtoList.add(
-                            WriterMapper.writerToDto(foundWriter.get()));
-                }
+                foundWriter.ifPresent(writer -> writerDtoList.add(
+                        WriterMapper.writerToDto(writer)));
             }
             movieDto.setWriterDtoList(writerDtoList);
         }
         // creating director dto list
         if(!directorPublicIdList.isEmpty()) {
-            Set<DirectorDto> directorDtoList = new HashSet<DirectorDto>();
+            Set<DirectorDto> directorDtoList = new HashSet<>();
             for(String directorPublicId : directorPublicIdList) {
                 Optional<Director> foundDirector = directorService.findByPublicId(directorPublicId);
                 if(foundDirector.isPresent() && foundDirector.get().getDeletedAt() == null) {
@@ -182,13 +171,11 @@ public class MovieMapper {
         }
         // star director dto list
         if(!starPublicIdList.isEmpty()) {
-            Set<StarDto> starDtoList = new HashSet<StarDto>();
+            Set<StarDto> starDtoList = new HashSet<>();
             for(String starPublicId : starPublicIdList) {
                 Optional<Star> foundStar = starService.findByPublicId(starPublicId);
-                if(foundStar.isPresent()) {
-                    starDtoList.add(
-                            StarMapper.starToDto(foundStar.get()));
-                }
+                foundStar.ifPresent(star -> starDtoList.add(
+                        StarMapper.starToDto(star)));
             }
             movieDto.setStarDtoList(starDtoList);
         }
@@ -196,8 +183,8 @@ public class MovieMapper {
     }
 
     public Movie dtoToMovie(MovieDto movieDto) {
-        if(!(movieDto instanceof MovieDto) ||movieDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + movieDto.toString());
+        if(movieDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         Movie returnValue = new Movie();

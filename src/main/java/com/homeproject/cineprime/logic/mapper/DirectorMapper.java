@@ -7,15 +7,13 @@ import com.homeproject.cineprime.view.request_json.DirectorRequestJson;
 import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-
 @Service
 public class DirectorMapper {
 
     public static DirectorDto directorToDto(Director director) {
 
-        if(!(director instanceof Director) ||director == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + director.toString());
+        if(director == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         PersonData personData = director.getPersonData();
@@ -33,8 +31,8 @@ public class DirectorMapper {
 
     public static DirectorResponseJson dtoToResponse(DirectorDto directorDto) {
 
-        if(!(directorDto instanceof DirectorDto) ||directorDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + directorDto.toString());
+        if(directorDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         DirectorResponseJson returnValue = new DirectorResponseJson();
@@ -49,8 +47,8 @@ public class DirectorMapper {
 
     public static DirectorDto requestToDto(DirectorRequestJson directorRequestJson) {
 
-        if(!(directorRequestJson instanceof DirectorRequestJson) ||directorRequestJson == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + directorRequestJson.toString());
+        if(directorRequestJson == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         DirectorDto returnValue = new DirectorDto();
@@ -66,8 +64,8 @@ public class DirectorMapper {
 
     public static Director dtoToDirector(DirectorDto directorDto) {
 
-        if(!(directorDto instanceof DirectorDto) ||directorDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + directorDto.toString());
+        if(directorDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         Director returnValue = new Director();

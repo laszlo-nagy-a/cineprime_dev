@@ -5,20 +5,19 @@ import com.homeproject.cineprime.logic.service.GenreService;
 import com.homeproject.cineprime.view.request_json.GenreRequestJson;
 import com.homeproject.cineprime.view.response_json.GenreResponseJson;
 import jakarta.validation.Valid;
-import org.mariadb.jdbc.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("genres")
 public class GenreController {
-    private GenreService genreService;
+    private final GenreService genreService;
     public GenreController(GenreService genreService) {
         this.genreService = genreService;
     }
@@ -29,8 +28,13 @@ public class GenreController {
     }
 
     @GetMapping
-    public List<GenreResponseJson> findAllGenre() {
-        return genreService.getAllGenreResponseJson();
+    public List<GenreResponseJson> findAllGenre(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
+    ) {
+        return genreService.getAllGenreResponseJson(type, search, pageSize, pageNumber);
     }
 
     @PostMapping
@@ -45,7 +49,7 @@ public class GenreController {
 
     @DeleteMapping("/{genre-id}")
     public String removeGenreById(@PathVariable("genre-id")String publicId) {
-        return genreService.removeGenreByPublidId(publicId);
+        return genreService.removeGenreByPublicId(publicId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/stars")
 public class StarController {
-
-    private StarService starService;
+    private final StarService starService;
 
     public StarController(StarService starService) {
         this.starService = starService;
@@ -29,8 +29,13 @@ public class StarController {
     }
 
     @GetMapping
-    public List<StarResponseJson> findAllStar() {
-        return starService.getAllStarResponseJson();
+    public List<StarResponseJson> findAllStar(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
+    ) {
+        return starService.getAllStarResponseJson(type, search, pageSize, pageNumber);
     }
 
     @PostMapping
@@ -45,7 +50,7 @@ public class StarController {
 
     @DeleteMapping("/{star-id}")
     public String removeStarById(@PathVariable("star-id")String publicId) {
-        return starService.removeStarByPublidId(publicId);
+        return starService.removeStarByPublicId(publicId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

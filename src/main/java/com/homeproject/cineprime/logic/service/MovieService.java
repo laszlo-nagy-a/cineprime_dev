@@ -4,17 +4,17 @@ import com.homeproject.cineprime.domain.model.Movie;
 import com.homeproject.cineprime.domain.repository.MovieRepository;
 import com.homeproject.cineprime.logic.dto.MovieDto;
 import com.homeproject.cineprime.logic.mapper.MovieMapper;
+import com.homeproject.cineprime.logic.service.search.MovieSearchService;
 import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.response_json.MovieRequestJson;
 import com.homeproject.cineprime.view.response_json.MovieResponseJson;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,24 +22,25 @@ import java.util.Optional;
 public class MovieService {
 
     private final MovieRepository movieRepository;
-
     private final MovieMapper movieMapper;
-
-    public MovieService (MovieRepository movieRepository, MovieMapper movieMapper) {
+    private final MovieSearchService movieSearchService;
+    public MovieService (MovieRepository movieRepository, MovieMapper movieMapper, MovieSearchService movieSearchService) {
         this.movieRepository = movieRepository;
         this.movieMapper = movieMapper;
+        this.movieSearchService = movieSearchService;
     }
 
     @Transactional(readOnly = true)
-    public List<MovieResponseJson> getAllMovieResponseJson() {
-        Pageable config = PageRequest.of(0, 2);
-        List<Movie> allMovies = movieRepository.findByDeletedAtIsNull(config);
-        List<MovieDto> allMovieDto = allMovies
+    public List<MovieResponseJson> getAllMovieResponseJson(String type, String search, Optional<Integer> pageSizeOptional, Optional<Integer> pageNumberOptional) throws ResponseStatusException {
+        List<Movie> resultSet = new ArrayList<>();
+        resultSet = movieSearchService.searchByTypeAndSearch(type, search, pageSizeOptional, pageNumberOptional);
+
+        List<MovieDto> resultMovieDto = resultSet
                 .stream()
                 .map(MovieMapper::movieToDto)
                 .toList();
 
-        return allMovieDto
+        return resultMovieDto
                 .stream()
                 .map(MovieMapper::dtoToResponse)
                 .toList();
@@ -50,8 +51,8 @@ public class MovieService {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
-                    The given ID is NULL or empty string, 
-                    try with another ID! Given ID: 
+                    The given ID is NULL or empty string,
+                    try with another ID! Given ID:
                     """ + publicId);
         }
 
@@ -70,7 +71,7 @@ public class MovieService {
     }
 
     public MovieResponseJson createMovie(MovieRequestJson movieRequestJson) throws ResponseStatusException {
-        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
+        if(movieRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -90,7 +91,7 @@ public class MovieService {
     }
 
     public MovieResponseJson updateMovie(MovieRequestJson movieRequestJson) throws ResponseStatusException {
-        if(!(movieRequestJson instanceof MovieRequestJson) || movieRequestJson == null) {
+        if(movieRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 

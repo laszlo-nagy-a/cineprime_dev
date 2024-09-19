@@ -9,8 +9,8 @@ import com.homeproject.cineprime.view.response_json.StarResponseJson;
 public class StarMapper {
     public static StarDto starToDto(Star star) {
 
-        if(!(star instanceof Star) ||star == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + star.toString());
+        if(star == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         PersonData personData = star.getPersonData();
@@ -28,8 +28,8 @@ public class StarMapper {
 
     public static StarResponseJson dtoToResponse(StarDto starDto) {
 
-        if(!(starDto instanceof StarDto) ||starDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + starDto.toString());
+        if(starDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         StarResponseJson returnValue = new StarResponseJson();
@@ -44,8 +44,8 @@ public class StarMapper {
 
     public static StarDto requestToDto(StarRequestJson starRequestJson) {
 
-        if(!(starRequestJson instanceof StarRequestJson) ||starRequestJson == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + starRequestJson.toString());
+        if(starRequestJson == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         StarDto returnValue = new StarDto();
@@ -61,8 +61,8 @@ public class StarMapper {
 
     public static Star dtoToStar(StarDto starDto) {
 
-        if(!(starDto instanceof StarDto) ||starDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + starDto.toString());
+        if(starDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         Star returnValue = new Star();

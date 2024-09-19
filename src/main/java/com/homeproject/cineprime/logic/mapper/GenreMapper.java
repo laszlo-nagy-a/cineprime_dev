@@ -11,8 +11,8 @@ public class GenreMapper {
 
     public static GenreDto requestToDto(GenreRequestJson requestEntity) {
 
-        if(!(requestEntity instanceof GenreRequestJson) ||requestEntity == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + requestEntity.toString());
+        if(requestEntity == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         GenreDto returnValue = new GenreDto();
@@ -26,8 +26,8 @@ public class GenreMapper {
 
     public static GenreResponseJson dtoToResponse(GenreDto genreDto) {
 
-        if(!(genreDto instanceof GenreDto) ||genreDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + genreDto.toString());
+        if(genreDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         GenreResponseJson returnValue = new GenreResponseJson();
@@ -40,8 +40,8 @@ public class GenreMapper {
 
     public static Genre dtoToGenre(GenreDto genreDto) {
 
-        if(!(genreDto instanceof GenreDto) ||genreDto == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + genreDto.toString());
+        if(genreDto == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         Genre returnValue = new Genre();
@@ -56,8 +56,8 @@ public class GenreMapper {
 
     public static GenreDto genreToDto(Genre genre) {
 
-        if(!(genre instanceof Genre) ||genre == null) {
-            throw new IllegalArgumentException("Given args are not comaptible. Arg Object values: " + genre.toString());
+        if(genre == null) {
+            throw new IllegalArgumentException("Given args are not compatible.");
         }
 
         GenreDto returnValue = new GenreDto();

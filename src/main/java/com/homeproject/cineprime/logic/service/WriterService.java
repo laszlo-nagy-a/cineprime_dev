@@ -4,40 +4,47 @@ import com.homeproject.cineprime.domain.model.Writer;
 import com.homeproject.cineprime.domain.repository.WriterRepository;
 import com.homeproject.cineprime.logic.dto.WriterDto;
 import com.homeproject.cineprime.logic.mapper.WriterMapper;
+import com.homeproject.cineprime.logic.service.search.WriterSearchService;
 import com.homeproject.cineprime.logic.util.PublicIdGenerator;
 import com.homeproject.cineprime.view.request_json.WriterRequestJson;
 import com.homeproject.cineprime.view.response_json.WriterResponseJson;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class WriterService {
 
-    private WriterRepository writerRepository;
+    private final WriterRepository writerRepository;
+    private final WriterSearchService writerSearchService;
 
-    public WriterService(WriterRepository writerRepository) {
+    public WriterService(WriterRepository writerRepository, WriterSearchService writerSearchService) {
         this.writerRepository = writerRepository;
+        this.writerSearchService = writerSearchService;
     }
 
 
     @Transactional(readOnly = true)
-    public List<WriterResponseJson> getAllWriterResponseJson() {
-        Pageable config = PageRequest.of(0, 2);
-        List<Writer> allWriter = writerRepository.findByDeletedAtIsNull(config);
-        List<WriterDto> allWriterDto = allWriter
+    public List<WriterResponseJson> getAllWriterResponseJson(String type, String search, Optional<Integer> pageSizeOptional, Optional<Integer> pageNumberOptional) throws ResponseStatusException {
+        List<Writer> resultSet = new ArrayList<>();
+        resultSet = writerSearchService.searchByTypeAndSearch(type, search, pageSizeOptional, pageNumberOptional);
+
+        if(resultSet.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Directors not found with these conditions, try with another!" );
+        }
+
+        List<WriterDto> resultWriterDto = resultSet
                 .stream()
                 .map(WriterMapper::writerToDto)
                 .toList();
 
-        return allWriterDto
+        return resultWriterDto
                 .stream()
                 .map(WriterMapper::dtoToResponse)
                 .toList();
@@ -48,8 +55,8 @@ public class WriterService {
         if(StringUtils.isEmpty(publicId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     """
-                    The given ID is NULL or empty string, 
-                    try with another ID! Given ID: 
+                    The given ID is NULL or empty string,
+                    try with another ID! Given ID:
                     """ + publicId);
         }
 
@@ -68,7 +75,7 @@ public class WriterService {
     }
 
     public WriterResponseJson createWriter(WriterRequestJson writerRequestJson) throws ResponseStatusException {
-        if(!(writerRequestJson instanceof  WriterRequestJson) || writerRequestJson == null) {
+        if(writerRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -88,7 +95,7 @@ public class WriterService {
     }
 
     public WriterResponseJson updateWriter(WriterRequestJson writerRequestJson) throws ResponseStatusException {
-        if(!(writerRequestJson instanceof  WriterRequestJson) || writerRequestJson == null) {
+        if(writerRequestJson == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The given object not compatible type or null.");
         }
 
@@ -113,7 +120,7 @@ public class WriterService {
         return returnValue;
     }
 
-    public String removeWriterByPublidId(String publicId) throws ResponseStatusException {
+    public String removeWriterByPublicId(String publicId) throws ResponseStatusException {
         if(publicId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
