@@ -9,7 +9,8 @@ import java.util.Date;
 @Setter
 public class WriterResponseJson {
     public String publicId;
-    public String name;
+    public String firstName;
+    public String lastName;
     public int age;
     public Date birthDate;
 }

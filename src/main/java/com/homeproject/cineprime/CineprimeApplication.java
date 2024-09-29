@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class CineprimeApplication {
-	// TODO: branch mergelés
 	// TODO: factory method implementálása (adatbázis adatok generálása)
 	// TODO: pár unit teszt írása
 	// TODO: SpringSecurity Bearer token elkészítse

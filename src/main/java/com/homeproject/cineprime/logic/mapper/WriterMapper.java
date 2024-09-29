@@ -34,7 +34,8 @@ public class WriterMapper {
 
         WriterResponseJson returnValue = new WriterResponseJson();
         returnValue.setPublicId(writerDto.getPublicId());
-        returnValue.setName(writerDto.getFirstName() + " " + writerDto.getLastName());
+        returnValue.setFirstName(writerDto.getFirstName());
+        returnValue.setLastName(writerDto.getLastName());
         returnValue.setAge(writerDto.getAge());
         returnValue.setBirthDate(writerDto.getBithDate());
 
