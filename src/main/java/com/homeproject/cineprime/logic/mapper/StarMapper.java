@@ -34,7 +34,8 @@ public class StarMapper {
 
         StarResponseJson returnValue = new StarResponseJson();
         returnValue.setPublicId(starDto.getPublicId());
-        returnValue.setName(starDto.getFirstName() + " " + starDto.getLastName());
+        returnValue.setFirstName(starDto.getFirstName());
+        returnValue.setLastName(starDto.getLastName());
         returnValue.setAge(starDto.getAge());
         returnValue.setBirthDate(starDto.getBithDate());
 

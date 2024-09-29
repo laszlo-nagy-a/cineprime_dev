@@ -37,7 +37,8 @@ public class DirectorMapper {
 
         DirectorResponseJson returnValue = new DirectorResponseJson();
         returnValue.setPublicId(directorDto.getPublicId());
-        returnValue.setName(directorDto.getFirstName() + " " + directorDto.getLastName());
+        returnValue.setFirstName(directorDto.getFirstName());
+        returnValue.setLastName(directorDto.getLastName());
         returnValue.setAge(directorDto.getAge());
         returnValue.setBirthDate(directorDto.getBithDate());
 
