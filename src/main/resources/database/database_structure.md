@@ -8,38 +8,51 @@
 ---
 - **id**  - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
 - name - szöveg (VARCHAR(500) NOT NULL) - *műfaj neve*
+- public_id - szöveg (VARCHAR(255) NOT NULL) - *publikus azonosító*
+- deleted_at - dátum (DATE DEFAULT NULL) - *logikai törlés dátuma*
 
 ### director - rendező
 ---
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
-- person_data - személy (PERSON NOT NULL) - *személy adatok*
+- public_id - szöveg (VARCHAR(255) NOT NULL) - *publikus azonosító*
+- first_name - szöveg (VARCHAR(255) NOT NULL) - *keresztnév*
+- last_name - szöveg (VARCHAR(255) NOT NULL) - *vezetéknév*
+- age - egész szám (SAMMLINT) - *kor*
+- birth_date - dátum (DATE) - *születési dátum*
+- deleted_at - dátum (DATE DEFAULT NULL) - *logikai törlés dátuma*
+
 
 ### writer - író
 ---
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
-- person_data - személy (PERSON NOT NULL) - *személy adatok*
+- public_id - szöveg (VARCHAR(255) NOT NULL) - *publikus azonosító*
+- first_name - szöveg (VARCHAR(255) NOT NULL) - *keresztnév*
+- last_name - szöveg (VARCHAR(255) NOT NULL) - *vezetéknév*
+- age - egész szám (SAMMLINT) - *kor*
+- birth_date - dátum (DATE) - *születési dátum*
+- deleted_at - dátum (DATE DEFAULT NULL) - *logikai törlés dátuma*
 
 ### star - színész
 ---
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
-- person_data - személy (PERSON NOT NULL) - *személy adatok*
+- public_id - szöveg (VARCHAR(255) NOT NULL) - *publikus azonosító*
+- first_name - szöveg (VARCHAR(255) NOT NULL) - *keresztnév*
+- last_name - szöveg (VARCHAR(255) NOT NULL) - *vezetéknév*
+- age - egész szám (SAMMLINT) - *kor*
+- birth_date - dátum (DATE) - *születési dátum*
+- deleted_at - dátum (DATE DEFAULT NULL) - *logikai törlés dátuma*
 
 ### movie - film
 ---
 - **id** - egész szám (BIGINT PRIMARY KEY AUTO INCREMENT) - *azonosító, elsődleges kulcs*
+- public_id - szöveg (VARCHAR(255) NOT NULL) - *publikus azonosító*
 - title - szöveg (VARCHAR(500) NOT NULL) - *film címe*
 - description - szöveg (VARCHAR(1024) - *film összefolgalója*
 - release_date - dátum (DATETIME) - *megjelenés dátuma*
 - pg  - egész szám (TINYINT) - *korhatár besorolás*
 - playtime_min - egész szám (SMALLINT UNSIGNED) - *játékidő percben*
 - last_modified_at - időbélyeg  (TIMESTAMP) - *utolsó módosítás dátuma*
-
-### person_data - személy adatok
----
-- first_name - szöveg (VARCHAR(255) NOT NULL) - *kereszt név*
-- last_name - szöveg (VARCHAR(255) NOT NULL) - *vezeték név*
-- age - szám (SMALLINT) - *életkor*
-- birthdate - dátum(DATETIME) - *születés dátuma*
+- deleted_at - dátum (DATE DEFAULT NULL) - *logikai törlés dátuma*
 
 ### writer_movie - kapcsolótábla
 --- 

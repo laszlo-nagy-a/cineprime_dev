@@ -2,6 +2,8 @@ package com.homeproject.cineprime.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -25,5 +27,6 @@ public class PersonData {
     @NotBlank
     private String lastName;
     private Short age;
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
 }

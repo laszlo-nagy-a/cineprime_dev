@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String publicId;
     @ManyToMany(
             fetch = FetchType.LAZY,
             mappedBy = "starList"
@@ -24,4 +26,5 @@ public class Star {
     @Embedded
     @Valid
     private PersonData personData;
+    private Date deletedAt;
 }

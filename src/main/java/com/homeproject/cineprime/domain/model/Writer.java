@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -12,17 +13,17 @@ import java.util.List;
 @Getter
 @Entity
 public class Writer {
-
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
+        private String publicId;
         @ManyToMany(
                 fetch = FetchType.LAZY,
                 mappedBy = "writerList"
         )
-        // TODO: Lazy nem működik, ez esetben DTO, vagy használjuk a JsonIdentifyInfo annotációt esetleg?
         private List<Movie> movieList;
         @Embedded
         @Valid
         private PersonData personData;
+        private Date deletedAt;
 }

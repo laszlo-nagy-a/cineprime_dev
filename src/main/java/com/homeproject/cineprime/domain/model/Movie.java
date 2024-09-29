@@ -19,6 +19,7 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String publicId;
     @Column(
             length = 500
     )
@@ -31,13 +32,13 @@ public class Movie {
     @Size(max = 1024)
     private String description;
     @Column(name = "release_date")
+    @Temporal(TemporalType.DATE)
     private Date releaseDate;
     private Byte pg;
     @Column(name = "playtime_min")
     private Short playTimeMin;
     @Column(name = "last_modified_at")
     private Timestamp lastModifiedAt;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (
             name = "writer_movie",
@@ -106,4 +107,5 @@ public class Movie {
             }
     )
     private List<Genre> genreList;
+    private Date deletedAt;
 }

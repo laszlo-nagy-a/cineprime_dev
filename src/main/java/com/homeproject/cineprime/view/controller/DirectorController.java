@@ -1,55 +1,65 @@
 package com.homeproject.cineprime.view.controller;
 
-import com.homeproject.cineprime.domain.model.Director;
-import com.homeproject.cineprime.logic.service.ControllerExceptionHandler;
+import com.homeproject.cineprime.logic.exceptionHandler.ControllerExceptionHandler;
 import com.homeproject.cineprime.logic.service.DirectorService;
+import com.homeproject.cineprime.view.request_json.DirectorRequestJson;
+import com.homeproject.cineprime.view.response_json.DirectorResponseJson;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("directors")
 public class DirectorController {
-
-    private DirectorService directorService;
+    private final DirectorService directorService;
 
     public DirectorController(DirectorService directorService) {
         this.directorService = directorService;
     }
-    @GetMapping("/directors/{director-id}")
-    public Optional<Director> findDirectorById(@PathVariable("director-id") Long id) {
-        return directorService.getDirectorById(id);
+
+    @GetMapping
+    public List<DirectorResponseJson> findAllDirector(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "pagesize") Optional<Integer> pageSize,
+            @RequestParam(required = false, name = "pagenumber") Optional<Integer> pageNumber
+    ) {
+        return directorService.getAllDirectorResponseJson(type, search, pageSize, pageNumber);
+    }
+    @GetMapping("/{director-public-id}")
+    public DirectorResponseJson findDirector(@PathVariable("director-public-id") String publicId) {
+        return directorService.getDirectorResponseJsonByPublicId(publicId);
     }
 
-    @GetMapping("/directors")
-    public List<Director> findAllDirector() {
-        return directorService.getAllDirector();
+    @PostMapping
+    public DirectorResponseJson createDirector(@Valid @RequestBody DirectorRequestJson request) {
+        return directorService.createDirector(request);
     }
 
-    //TODO: personData JSON postolás helyett megoldható valahogy?
-    @PostMapping("/directors")
-    public void createDirector(@Valid @RequestBody Director director) {
-        directorService.createDirector(director);
+    @PutMapping
+    public DirectorResponseJson updateDirectorById(@Valid @RequestBody DirectorRequestJson request) {
+        return directorService.updateDirector(request);
     }
 
-    @PutMapping("/directors")
-    public void updateDirectorById(@Valid @RequestBody Director directorToUpdate) {
-        directorService.updateDirector(directorToUpdate);
+    @DeleteMapping("/{director-id}")
+    public String removeDirectorById(@PathVariable("director-id") String publicId) {
+        return directorService.removeDirectorByPublidId(publicId);
     }
 
-    @DeleteMapping("/directors/{director-id}")
-    public String removeDriectorById(@PathVariable("director-id") Long id) {
-        return directorService.deleteDirector(id);
-    }
-
-    //TODO: hiba kezelés így jó lehet jakarta validationnal?
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
         return ControllerExceptionHandler.handleValidationExceptions(exception);
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResponseStatusException.class)
+    public Map<String, String> entityNotFoundExceptionHandler(ResponseStatusException exception) {
+        return ControllerExceptionHandler.handleNotFoundStatusExcetions(exception);
     }
 }
